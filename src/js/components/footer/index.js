@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { lighten } from 'polished';
 
@@ -33,10 +34,12 @@ const Right = styled.div({
 });
 
 const MarginLeft = {
-  marginLeft: '1rem'
+  marginLeft: '1.5rem'
 };
 
-const Footer = () => {
+const Footer = props => {
+  const { toggleHideSide, hideSide } = props;
+
   const [isSmall, setIsSmall] = useState(getConfig('footer_is_small') || false);
 
   const toggleSmall = () =>
@@ -73,6 +76,14 @@ const Footer = () => {
             onClick={toggleSmall}
             title="Close footer"
           />
+
+          <Icon
+            icon={hideSide ? 'comment' : 'comment-slash'}
+            onClick={toggleHideSide}
+            title={`${hideSide ? 'Open' : 'Close'} comment`}
+            style={MarginLeft}
+          />
+
           <Icon
             icon="plus"
             onClick={toggleSmall}
@@ -83,6 +94,11 @@ const Footer = () => {
       )}
     </>
   );
+};
+
+Footer.propTypes = {
+  toggleHideSide: PropTypes.func.isRequired,
+  hideSide: PropTypes.bool.isRequired
 };
 
 export default Footer;

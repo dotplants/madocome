@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 
 import Footer from '../components/footer';
 import Player from '../components/youtube-player';
+import { getConfig, setConfig } from '../utils/config';
 
 const Wrapper = styled.div({
   height: '100%',
@@ -32,7 +33,14 @@ const Side = styled.div({
 });
 
 const Index = () => {
-  const hideSide = false;
+  const [hideSide, setHideSide] = useState(getConfig('hide_side') || false);
+  const toggleHideSide = () =>
+    setHideSide(prev => {
+      const next = !prev;
+      setConfig('hide_side', next);
+      return next;
+    });
+
   return (
     <>
       <Wrapper hideSide={hideSide}>
@@ -43,7 +51,7 @@ const Index = () => {
         </Main>
         {!hideSide && <Side>b</Side>}
       </Wrapper>
-      <Footer />
+      <Footer toggleHideSide={toggleHideSide} hideSide={hideSide} />
     </>
   );
 };
