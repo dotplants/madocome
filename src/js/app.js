@@ -7,14 +7,20 @@ import Index from './pages';
 
 const bgBase = '#000';
 const textBase = '#fff';
+const linkBase = '#036eec';
 const theme = {
   bgBase,
   textBase,
+  linkBase,
   background: lighten(0.1, bgBase),
   text: darken(0.25, textBase)
 };
 
 const GlobalStyle = createGlobalStyle({
+  'html, body': {
+    width: '100%',
+    height: '100%'
+  },
   body: {
     fontFamily:
       '-apple-system, BlinkMacSystemFont, Roboto, "游ゴシック体", YuGothic, "Yu Gothic Medium", sans-serif',
@@ -23,10 +29,10 @@ const GlobalStyle = createGlobalStyle({
     fontSize: '1.15rem'
   },
   a: {
-    color: '#036eec',
+    color: props => props.theme.linkBase,
     textDecoration: 'none'
   },
-  '*': {
+  '*, *:after, *:before': {
     boxSizing: 'border-box'
   }
 });
