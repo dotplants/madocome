@@ -1,0 +1,25 @@
+{
+  "version": 2,
+  "name": "live-viewer",
+  "alias": ["live-viewer.nzws.me"],
+  "scope": "nzws",
+  "regions": ["hnd1"],
+  "public": false,
+  "builds": [
+    { "src": "package.json", "use": "@now/static-build" },
+    { "src": "src/server/routes/*.js", "use": "@now/node" }
+  ],
+  "github": { "silent": true },
+  "routes": [
+    { "src": "/api/upload", "dest": "/src/server/routes/api_upload.js" },
+    {
+      "src": "/oauth/callback",
+      "dest": "/src/server/routes/oauth_callback.js"
+    },
+    { "src": "/login", "dest": "/src/server/routes/login.js" }
+  ],
+  "env": {
+    "YT_CLIENT_ID": "@viewer_yt_client_id",
+    "YT_CLIENT_SECRET": "@viewer_yt_client_secret"
+  }
+}

@@ -63,3 +63,6 @@ typings/
 # Parcel build output
 .cache
 dist
+
+.vscode
+.idea
