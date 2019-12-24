@@ -1,9 +1,10 @@
 import React from 'react';
+import { BrowserRouter } from 'react-router-dom';
 import { createGlobalStyle, ThemeProvider } from 'styled-components';
 import { Normalize } from 'styled-normalize';
 import { lighten, darken } from 'polished';
 
-import Index from './pages';
+import Routes from './routes';
 
 const bgBase = '#000';
 const textBase = '#fff';
@@ -13,7 +14,8 @@ const theme = {
   textBase,
   linkBase,
   background: lighten(0.1, bgBase),
-  text: darken(0.25, textBase)
+  text: darken(0.25, textBase),
+  shadow: '0 0 10px #00000050'
 };
 
 const GlobalStyle = createGlobalStyle({
@@ -32,6 +34,10 @@ const GlobalStyle = createGlobalStyle({
     color: props => props.theme.linkBase,
     textDecoration: 'none'
   },
+  '.size-max': {
+    width: '100%',
+    height: '100%'
+  },
   '*, *:after, *:before': {
     boxSizing: 'border-box'
   }
@@ -41,7 +47,9 @@ const App = () => (
   <ThemeProvider theme={theme}>
     <Normalize />
     <GlobalStyle />
-    <Index />
+    <BrowserRouter>
+      <Routes />
+    </BrowserRouter>
   </ThemeProvider>
 );
 

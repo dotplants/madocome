@@ -1,8 +1,14 @@
 const KEY = 'live_viewer_config';
 
+const defaultConfig = {
+  version: 1
+};
+
+export const getStringData = () => localStorage.getItem(KEY);
+
 export const getConfig = key => {
   try {
-    const data = JSON.parse(localStorage.getItem(KEY) || '{}');
+    const data = JSON.parse(getStringData() || JSON.stringify(defaultConfig));
     return data[key];
   } catch (e) {
     console.error(e);

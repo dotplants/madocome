@@ -5,13 +5,14 @@ import { lighten } from 'polished';
 
 import ExternalLink from '../external-link';
 import Icon from '../icon';
-import { getConfig, setConfig } from '../../utils/config';
+import { getConfig, getStringData, setConfig } from '../../utils/config';
 
 const base = styled.div({
   position: 'fixed',
   bottom: 0,
   left: 0,
-  background: props => lighten(0.05, props.theme.background)
+  background: props => lighten(0.05, props.theme.background),
+  boxShadow: props => props.theme.shadow
 });
 
 const StyledFooter = styled(base)({
@@ -38,7 +39,7 @@ const MarginLeft = {
 };
 
 const Footer = props => {
-  const { toggleHideSide, hideSide } = props;
+  const { toggleHideSide, hideSide, addVideo } = props;
 
   const [isSmall, setIsSmall] = useState(getConfig('footer_is_small') || false);
 
@@ -49,10 +50,18 @@ const Footer = props => {
       return next;
     });
 
+  const generateLink = () => {
+    const data = encodeURIComponent(getStringData());
+    return prompt(
+      '今の時点での「どの動画を読み込んでいるか」「大きさなどの設定」を共有できます。次のリンクを他の人に共有してください:',
+      `${location.origin}/shared?${data}`
+    );
+  };
+
   return (
     <>
       {isSmall && (
-        <SmallButton onClick={toggleSmall} title="Open footer">
+        <SmallButton onClick={toggleSmall} title="メニューを開く">
           <Icon icon="window-maximize" />
         </SmallButton>
       )}
@@ -66,7 +75,8 @@ const Footer = props => {
                   live-viewer
                 </ExternalLink>{' '}
                 built by{' '}
-                <ExternalLink href="https://nzws.me">@nzws_me</ExternalLink>
+                <ExternalLink href="https://nzws.me">@nzws_me</ExternalLink>{' '}
+                with 💖
               </small>
             </b>
           </Right>
@@ -74,20 +84,27 @@ const Footer = props => {
           <Icon
             icon="window-minimize"
             onClick={toggleSmall}
-            title="Close footer"
+            title="メニューを閉じる"
           />
 
           <Icon
             icon={hideSide ? 'comment' : 'comment-slash'}
             onClick={toggleHideSide}
-            title={`${hideSide ? 'Open' : 'Close'} comment`}
+            title={`コメントを${hideSide ? '開く' : '閉じる'}`}
             style={MarginLeft}
           />
 
           <Icon
             icon="plus"
-            onClick={toggleSmall}
-            title="Add video"
+            onClick={addVideo}
+            title="クリップボードからURLを読み込み"
+            style={MarginLeft}
+          />
+
+          <Icon
+            icon="share-square"
+            onClick={generateLink}
+            title="現在の状態をリンクにして共有"
             style={MarginLeft}
           />
         </StyledFooter>
@@ -98,7 +115,8 @@ const Footer = props => {
 
 Footer.propTypes = {
   toggleHideSide: PropTypes.func.isRequired,
-  hideSide: PropTypes.bool.isRequired
+  hideSide: PropTypes.bool.isRequired,
+  addVideo: PropTypes.func.isRequired
 };
 
 export default Footer;
