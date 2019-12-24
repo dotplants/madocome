@@ -1,0 +1,38 @@
+{
+  "name": "template-website",
+  "version": "1.0.0",
+  "description": "A project template for Minimum website built in eslint, prettier, editorconfig, stylelint and parcel.",
+  "author": "nzws <git@nzws.me>",
+  "license": "none",
+  "private": true,
+  "scripts": {
+    "lint:js": "eslint --ignore-path .gitignore \"**/*.js\" && prettier --check --ignore-path .gitignore \"**/*.js\"",
+    "lint:css": "stylelint --ignore-path .gitignore **/*.scss && prettier --check --ignore-path .gitignore \"**/*.scss\"",
+    "lint:md": "prettier --check --ignore-path .gitignore \"**/*.md\"",
+    "lint:json": "prettier --check --ignore-path .gitignore \"**/*.json\"",
+    "lint": "npm-run-all lint:* -s",
+    "format:js": "prettier --write --ignore-path .gitignore \"**/*.js\"",
+    "format:css": "stylelint --fix --ignore-path .gitignore **/*.scss && prettier --write --ignore-path .gitignore \"**/*.scss\"",
+    "format:md": "prettier --write --ignore-path .gitignore \"**/*.md\"",
+    "format:json": "prettier --write --ignore-path .gitignore \"**/*.json\"",
+    "format": "npm-run-all format:* -s",
+    "build": "parcel build src/index.html --no-source-maps",
+    "watch": "parcel src/index.html"
+  },
+  "devDependencies": {
+    "@yuzulabo/eslint-config": "~1",
+    "@yuzulabo/prettier-config": "~1",
+    "eslint": "~6",
+    "npm-run-all": "~4",
+    "parcel-bundler": "~1",
+    "prettier": "~1",
+    "stylelint": "~11",
+    "stylelint-config-prettier": "~5",
+    "stylelint-config-standard": "~19",
+    "stylelint-scss": "~3"
+  },
+  "prettier": "@yuzulabo/prettier-config",
+  "eslintConfig": {
+    "extends": "@yuzulabo"
+  }
+}
