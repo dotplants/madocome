@@ -7,5 +7,5 @@
   "public": false,
   "builds": [{ "src": "package.json", "use": "@now/static-build" }],
   "github": { "silent": true },
-  "rewrites": [{ "source": "/(.*)", "destination": "/dist/index.html" }]
+  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
 }
