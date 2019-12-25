@@ -6,5 +6,6 @@
   "regions": ["hnd1"],
   "public": false,
   "builds": [{ "src": "package.json", "use": "@now/static-build" }],
-  "github": { "silent": true }
+  "github": { "silent": true },
+  "routes": [{ "src": "^/(.*)", "dest": "/dist/index.html" }]
 }
