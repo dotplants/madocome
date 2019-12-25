@@ -12,8 +12,8 @@
     "format:js": "eslint --fix --ignore-path .gitignore \"**/*.js\"",
     "format:prettier": "pretty-quick",
     "format": "npm-run-all format:* -s",
-    "build": "parcel build src/index.html --no-source-maps",
-    "dev": "parcel src/index.html"
+    "build": "parcel build web/index.html --no-source-maps",
+    "dev": "parcel web/index.html"
   },
   "devDependencies": {
     "@babel/core": "^7.7.7",

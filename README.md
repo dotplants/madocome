@@ -1,3 +1,3 @@
 # live-viewer
 
-[WIP] https://live-viewer.nzws.me/
+https://live-viewer.nzws.me/

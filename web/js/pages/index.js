@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
 
 import Footer from '../components/footer';
 import Player from '../components/youtube-player';
 import { getConfig, setConfig } from '../utils/config';
 import { selectOneColor } from '../utils/colors';
-import { Main, Side, Wrapper } from '../components/layout';
+import { Main, Wrapper } from '../components/layout';
 import NoVideo from '../components/no-video';
-import styled from 'styled-components';
+import Sidebar from '../components/side';
 
 const youtubeRegExp = /(.*?)(^|\/|v=)([a-z0-9_-]{11})(.*)?/im;
 
@@ -42,6 +43,7 @@ const PlayerItem = styled.div({
 const Index = () => {
   const [windowWidth, setWindowWidth] = useState(0);
   const [hideSide, setHideSide] = useState(getConfig('hide_side') || false);
+  const [useTop, setUseTop] = useState(getConfig('main_use_top') || false);
   const [videos, setVideos] = useState(getConfig('videos') || []);
 
   const addVideo = () => {
@@ -105,23 +107,29 @@ const Index = () => {
         });
       case 'resize':
         return setVideos(prev => {
-          prev[index] = {
-            ...prev[index],
+          prev[index] = null;
+          prev.splice(index, 0, {
+            ...videoData,
             ratio: parseFloat(
               (videoData.ratio + (value === 'up' ? -0.1 : 0.1)).toFixed(1)
             ),
             pinned: true
-          };
+          });
+          prev = prev.filter(video => video);
+
           setConfig('videos', prev);
           return prev;
         });
       case 'reset':
         return setVideos(prev => {
-          prev[index] = {
-            ...prev[index],
+          prev[index] = null;
+          prev.splice(index, 0, {
+            ...videoData,
             ratio: setRatio(prev.length),
             pinned: false
-          };
+          });
+          prev = prev.filter(video => video);
+
           setConfig('videos', prev);
           return prev;
         });
@@ -129,13 +137,6 @@ const Index = () => {
         return alert('command is not found');
     }
   };
-
-  const toggleHideSide = () =>
-    setHideSide(prev => {
-      const next = !prev;
-      setConfig('hide_side', next);
-      return next;
-    });
 
   const widthUpdater = () =>
     setWindowWidth(window.innerWidth - (hideSide ? 0 : 400) - 20);
@@ -149,24 +150,29 @@ const Index = () => {
   return (
     <>
       <Wrapper hideSide={hideSide}>
-        <Main>
-          {videos.map(video => (
-            <PlayerItem
-              style={{
-                width: windowWidth / video.ratio,
-                height: (windowWidth / video.ratio / 16) * 9
-              }}
-              key={video.id}
-            >
-              <Player video={video} updateVideo={updateVideo} />
-            </PlayerItem>
-          ))}
-          {!videos[0] && <NoVideo />}
+        <Main useTop={useTop && videos[0]}>
+          {videos.map(
+            video =>
+              video && (
+                <PlayerItem
+                  style={{
+                    width: windowWidth / video.ratio,
+                    height: (windowWidth / video.ratio / 16) * 9
+                  }}
+                  key={video.id}
+                >
+                  <Player video={video} updateVideo={updateVideo} />
+                </PlayerItem>
+              )
+          )}
+          {!videos[0] && <NoVideo addVideo={addVideo} />}
         </Main>
-        {!hideSide && <Side>WIP:コメントが入る所</Side>}
+        {!hideSide && <Sidebar videos={videos} setVideos={setVideos} />}
       </Wrapper>
       <Footer
-        toggleHideSide={toggleHideSide}
+        setUseTop={setUseTop}
+        useTop={useTop}
+        setHideSide={setHideSide}
         hideSide={hideSide}
         addVideo={addVideo}
       />

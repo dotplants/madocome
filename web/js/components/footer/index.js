@@ -39,7 +39,7 @@ const MarginLeft = {
 };
 
 const Footer = props => {
-  const { toggleHideSide, hideSide, addVideo } = props;
+  const { setUseTop, useTop, setHideSide, hideSide, addVideo } = props;
 
   const [isSmall, setIsSmall] = useState(getConfig('footer_is_small') || false);
 
@@ -47,6 +47,20 @@ const Footer = props => {
     setIsSmall(prev => {
       const next = !prev;
       setConfig('footer_is_small', next);
+      return next;
+    });
+
+  const toggleHideSide = () =>
+    setHideSide(prev => {
+      const next = !prev;
+      setConfig('hide_side', next);
+      return next;
+    });
+
+  const toggleUseTop = () =>
+    setUseTop(prev => {
+      const next = !prev;
+      setConfig('main_use_top', next);
       return next;
     });
 
@@ -95,6 +109,13 @@ const Footer = props => {
           />
 
           <Icon
+            icon={useTop ? 'compress' : 'angle-double-up'}
+            onClick={toggleUseTop}
+            title={`動画を${useTop ? '中央' : '上部'}に設置`}
+            style={MarginLeft}
+          />
+
+          <Icon
             icon="plus"
             onClick={addVideo}
             title="クリップボードからURLを読み込み"
@@ -114,7 +135,9 @@ const Footer = props => {
 };
 
 Footer.propTypes = {
-  toggleHideSide: PropTypes.func.isRequired,
+  setUseTop: PropTypes.func.isRequired,
+  useTop: PropTypes.bool.isRequired,
+  setHideSide: PropTypes.func.isRequired,
   hideSide: PropTypes.bool.isRequired,
   addVideo: PropTypes.func.isRequired
 };

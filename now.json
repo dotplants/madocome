@@ -1,0 +1,14 @@
+{
+  "version": 2,
+  "name": "live-viewer",
+  "alias": ["live-viewer.nzws.me"],
+  "scope": "nzws",
+  "regions": ["hnd1"],
+  "public": false,
+  "builds": [{ "src": "package.json", "use": "@now/static-build" }],
+  "github": { "silent": true },
+  "routes": [{ "src": "/(.*)", "dest": "/web/index.html" }],
+  "env": {
+    "YT_CLIENT_ID": "@viewer_yt_client_id"
+  }
+}
