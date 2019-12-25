@@ -7,8 +7,5 @@
   "public": false,
   "builds": [{ "src": "package.json", "use": "@now/static-build" }],
   "github": { "silent": true },
-  "routes": [{ "src": "/(.*)", "dest": "/web/index.html" }],
-  "env": {
-    "YT_CLIENT_ID": "@viewer_yt_client_id"
-  }
+  "routes": [{ "src": "/(.*)", "dest": "/web/index.html" }]
 }

@@ -3,12 +3,15 @@ import { Redirect } from 'react-router-dom';
 
 import { resetConfig } from '../utils/config';
 
+const CLIENT_ID =
+  '671635918752-19qo63itldo19b9k91dpr67r7424t008.apps.googleusercontent.com';
+
 const Login = () => {
   const [ready, setReady] = useState(false);
 
   if (!location.hash) {
     const opts = {
-      client_id: process.env.YT_CLIENT_ID,
+      client_id: CLIENT_ID,
       redirect_uri: `${location.origin}/login`,
       scope: [
         'https://www.googleapis.com/auth/youtube.readonly',
@@ -46,7 +49,7 @@ const Login = () => {
     )
       .then(response => response.json())
       .then(json => {
-        if (json.audience !== process.env.YT_CLIENT_ID) {
+        if (json.audience !== CLIENT_ID) {
           return alert(
             'データが改ざんされている可能性があるため使用できません。'
           );
