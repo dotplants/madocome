@@ -12,13 +12,13 @@ import Comment from '../comment';
 import Post from './post';
 import queryBuilder from '../../utils/query-builder';
 
-const Side = styled.div(({ theme }) => ({
+const Side = styled.div(({ theme, isHide }) => ({
+  display: isHide ? 'none' : 'grid',
   height: '100vh',
   gridRow: 1,
   gridColumn: 2,
   background: lighten(0.18, theme.bgBase),
   boxShadow: theme.shadow,
-  display: 'grid',
   gridTemplateRows: 'auto 1fr auto',
   gridTemplateColumns: '1fr'
 }));
@@ -69,7 +69,7 @@ const insertTop = (element, newValue) => {
 };
 
 const Sidebar = props => {
-  const { videos, setVideos } = props;
+  const { videos, setVideos, isHide } = props;
   const [menuOpened, setMenuOpened] = useState(false);
   const [prevVideos, setPrevVideos] = useState([]);
   const [comments, setComments] = useState([]);
@@ -253,10 +253,12 @@ const Sidebar = props => {
 
   const toggleMenuOpened = () => setMenuOpened(prev => !prev);
 
-  const getVideoIndex = videoId => videos.findIndex(({ id }) => id === videoId);
+  const getVideoIndex = videoId =>
+    videos.findIndex(video => video.id === videoId);
   const setVideo = (videoId, data) =>
     setVideos(prev => {
       const index = getVideoIndex(videoId);
+      if (index !== -1) return prev;
       const videoData = prev[index];
       prev[index] = null;
       prev.splice(index, 0, {
@@ -270,7 +272,7 @@ const Sidebar = props => {
     });
 
   return (
-    <Side>
+    <Side isHide={isHide}>
       {menuOpened && (
         <StyledMenu>
           {videos.map(video => (
@@ -344,7 +346,8 @@ const Sidebar = props => {
 
 Sidebar.propTypes = {
   videos: PropTypes.array.isRequired,
-  setVideos: PropTypes.func.isRequired
+  setVideos: PropTypes.func.isRequired,
+  isHide: PropTypes.bool.isRequired
 };
 
 export default Sidebar;

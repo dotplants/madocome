@@ -174,7 +174,7 @@ const Index = () => {
           )}
           {!videos[0] && <NoVideo addVideo={addVideo} />}
         </Main>
-        {!hideSide && <Sidebar videos={videos} setVideos={setVideos} />}
+        <Sidebar videos={videos} setVideos={setVideos} isHide={hideSide} />
       </Wrapper>
       <Footer
         setUseTop={setUseTop}
