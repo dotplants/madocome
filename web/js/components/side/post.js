@@ -7,23 +7,23 @@ import Icon from '../icon';
 import { MenuItem, Menu } from '../menu';
 import { getConfig } from '../../utils/config';
 
-const StyledPostWrapper = styled.div({
-  background: props => lighten(0.25, props.theme.bgBase),
-  boxShadow: props => props.theme.shadow,
+const StyledPostWrapper = styled.div(({ theme }) => ({
+  background: lighten(0.25, theme.bgBase),
+  boxShadow: theme.shadow,
   gridRow: 3,
   gridColumn: 1,
   padding: '15px'
-});
+}));
 
-const Input = styled.input({
+const Input = styled.input(({ theme }) => ({
   border: 'none',
-  color: props => props.theme.textBase,
+  color: theme.textBase,
   display: 'block',
   width: '100%',
   background: 'transparent',
   padding: '3px',
-  borderBottom: props => `solid 3px ${lighten(0.35, props.theme.bgBase)}`
-});
+  borderBottom: `solid 3px ${lighten(0.35, theme.bgBase)}`
+}));
 
 const Buttons = styled.div({
   marginTop: '10px',
@@ -34,22 +34,22 @@ const Right = styled.div({
   float: 'right'
 });
 
-const PostButton = styled.button({
+const PostButton = styled.button(({ theme }) => ({
   border: 'none',
-  color: props => props.theme.textBase,
-  background: props => props.theme.linkBase,
-  boxShadow: props => props.theme.shadow,
+  color: theme.textBase,
+  background: theme.linkBase,
+  boxShadow: theme.shadow,
   padding: '8px 15px',
   cursor: 'pointer'
-});
+}));
 
-const PostConfig = styled.button({
+const PostConfig = styled.button(({ theme }) => ({
   border: 'none',
-  color: props => props.theme.text,
+  color: theme.text,
   background: 'transparent',
   padding: '8px 15px',
   cursor: 'pointer'
-});
+}));
 
 const StyledMenu = styled(Menu)({
   right: 'initial',
@@ -57,15 +57,14 @@ const StyledMenu = styled(Menu)({
   bottom: 0
 });
 
-const ColorBlock = styled.span({
+const ColorBlock = styled.span(({ bg }) => ({
   display: 'inline-block',
   width: '1rem',
   height: '1rem',
-  background: props => props.bg
-});
+  background: bg
+}));
 
-const Post = props => {
-  const { videos } = props;
+const Post = ({ videos }) => {
   const [value, setValue] = useState('');
   const [commentId, setCommentId] = useState('');
   const [menuOpened, setMenuOpened] = useState(false);

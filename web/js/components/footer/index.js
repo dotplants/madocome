@@ -7,13 +7,13 @@ import ExternalLink from '../external-link';
 import Icon from '../icon';
 import { getConfig, getStringData, setConfig } from '../../utils/config';
 
-const base = styled.div({
+const base = styled.div(({ theme }) => ({
   position: 'fixed',
   bottom: 0,
   left: 0,
-  background: props => lighten(0.05, props.theme.background),
-  boxShadow: props => props.theme.shadow
-});
+  background: lighten(0.05, theme.background),
+  boxShadow: theme.shadow
+}));
 
 const StyledFooter = styled(base)({
   padding: '15px 30px',
@@ -21,14 +21,14 @@ const StyledFooter = styled(base)({
   width: '100%'
 });
 
-const SmallButton = styled(base)({
+const SmallButton = styled(base)(({ theme }) => ({
   padding: '10px',
   margin: '8px',
   borderRadius: '100%',
   cursor: 'pointer',
-  background: props => props.theme.linkBase,
-  color: props => props.theme.textBase
-});
+  background: theme.linkBase,
+  color: theme.textBase
+}));
 
 const Right = styled.div({
   float: 'right'
@@ -38,9 +38,7 @@ const MarginLeft = {
   marginLeft: '1.5rem'
 };
 
-const Footer = props => {
-  const { setUseTop, useTop, setHideSide, hideSide, addVideo } = props;
-
+const Footer = ({ setUseTop, useTop, setHideSide, hideSide, addVideo }) => {
   const [isSmall, setIsSmall] = useState(getConfig('footer_is_small') || false);
 
   const toggleSmall = () =>

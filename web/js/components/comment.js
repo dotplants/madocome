@@ -6,25 +6,24 @@ import ExternalLink from './external-link';
 import { darken } from 'polished';
 import Icon from './icon';
 
-const StyledComment = styled.div({
-  borderLeft: props => `solid 3px ${props.color}`,
+const StyledComment = styled.div(({ color, hideLong }) => ({
+  borderLeft: `solid 3px ${color}`,
   width: '100%',
   textAlign: 'left',
   padding: '5px 8px',
   fontSize: '0.95rem',
-  '': props =>
-    props.hideLong
-      ? {
-          textOverflow: 'ellipsis',
-          whiteSpace: 'nowrap'
-        }
-      : {}
-});
+  '': hideLong
+    ? {
+        textOverflow: 'ellipsis',
+        whiteSpace: 'nowrap'
+      }
+    : {}
+}));
 
-const UserLink = styled(ExternalLink)({
+const UserLink = styled(ExternalLink)(({ theme }) => ({
   textDecoration: 'none',
-  color: props => darken(0.15, props.theme.text)
-});
+  color: darken(0.15, theme.text)
+}));
 
 const Avatar = styled.img({
   width: '1.3rem',
@@ -37,11 +36,11 @@ const UserName = styled.span({
   marginRight: '5px'
 });
 
-const AvatarBadge = styled(Icon)({
+const AvatarBadge = styled(Icon)(({ color }) => ({
   marginRight: '5px',
   fontSize: '0.9rem',
-  color: props => props.color || 'initial'
-});
+  color: color || 'initial'
+}));
 
 /*
 const getUser = (userId, video) => new Promise((resolve, reject) => {
@@ -57,9 +56,7 @@ const getUser = (userId, video) => new Promise((resolve, reject) => {
 });
 */
 
-const Comment = props => {
-  const { comment, settings } = props;
-
+const Comment = ({ comment, settings }) => {
   if (comment.isSystem) {
     const style = {};
     if (comment.video) {

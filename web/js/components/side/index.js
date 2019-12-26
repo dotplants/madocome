@@ -11,25 +11,25 @@ import Alert from '../alert';
 import Comment from '../comment';
 import Post from './post';
 
-const Side = styled.div({
+const Side = styled.div(({ theme }) => ({
   height: '100vh',
   gridRow: 1,
   gridColumn: 2,
-  background: props => lighten(0.18, props.theme.bgBase),
-  boxShadow: props => props.theme.shadow,
+  background: lighten(0.18, theme.bgBase),
+  boxShadow: theme.shadow,
   display: 'grid',
   gridTemplateRows: 'auto 1fr auto',
   gridTemplateColumns: '1fr'
-});
+}));
 
-const Selector = styled.div({
-  background: props => lighten(0.25, props.theme.bgBase),
-  boxShadow: props => props.theme.shadow,
+const Selector = styled.div(({ theme }) => ({
+  background: lighten(0.25, theme.bgBase),
+  boxShadow: theme.shadow,
   gridRow: 1,
   gridColumn: 1,
   padding: '15px 20px',
   cursor: 'pointer'
-});
+}));
 
 const Right = styled.div({
   float: 'right'
@@ -51,12 +51,12 @@ const StyledMenu = styled(Menu)({
   width: 400 - 15 * 2
 });
 
-const ColorBlock = styled.span({
+const ColorBlock = styled.span(({ bg }) => ({
   display: 'inline-block',
   width: '1rem',
   height: '1rem',
-  background: props => props.bg
-});
+  background: bg
+}));
 
 const commentTokens = {};
 const TIMEOUT = 10000;
@@ -100,24 +100,24 @@ const Sidebar = props => {
       }
     })
       .then(response => response.json())
-      .then(data => {
-        if (data.nextPageToken) {
-          commentTokens[videoId] = data.nextPageToken;
+      .then(({ nextPageToken, items }) => {
+        if (nextPageToken) {
+          commentTokens[videoId] = nextPageToken;
         }
-        if (!data.items) {
+        if (!items) {
           return;
         }
 
         const i = getVideoIndex(videoId);
 
-        data.items.map(item => {
+        items.map(item => {
           item.video = videos[i];
           item.id = Math.random()
             .toString(36)
             .slice(-8);
           return item;
         });
-        delayAdd(data.items, 0, TIMEOUT / data.items);
+        delayAdd(items, 0, TIMEOUT / items);
       });
   };
 
@@ -136,10 +136,10 @@ const Sidebar = props => {
       return;
     }
     const newVideo = videos.filter(
-      v => !prevVideos.find(video => video.id === v.id)
+      ({ id }) => !prevVideos.find(video => video.id === id)
     );
     const removedVideo = prevVideos.filter(
-      v => !videos.find(video => video.id === v.id)
+      ({ id }) => !videos.find(video => video.id === id)
     );
 
     newVideo.forEach(addCommentGetter);
@@ -162,21 +162,17 @@ const Sidebar = props => {
       }
     )
       .then(response => response.json())
-      .then(data => {
-        if (data.error) {
+      .then(({ error, items }) => {
+        if (error) {
           return setComments(prev =>
             insertTop(prev, {
               isSystem: true,
               video,
-              body: `システムエラー: ${JSON.stringify(data.error)}`
+              body: `システムエラー: ${JSON.stringify(error)}`
             })
           );
         }
-        if (
-          !data.items ||
-          !data.items[0] ||
-          !data.items[0].liveStreamingDetails
-        ) {
+        if (!items || !items[0] || !items[0].liveStreamingDetails) {
           return setComments(prev =>
             insertTop(prev, {
               video,
@@ -186,7 +182,7 @@ const Sidebar = props => {
           );
         }
 
-        const liveChatId = data.items[0].liveStreamingDetails.activeLiveChatId;
+        const liveChatId = items[0].liveStreamingDetails.activeLiveChatId;
         setVideo(video.id, {
           liveChatId,
           hideComment: false
@@ -253,8 +249,7 @@ const Sidebar = props => {
 
   const toggleMenuOpened = () => setMenuOpened(prev => !prev);
 
-  const getVideoIndex = videoId =>
-    videos.findIndex(video => video.id === videoId);
+  const getVideoIndex = videoId => videos.findIndex(({ id }) => id === videoId);
   const setVideo = (videoId, data) =>
     setVideos(prev => {
       const index = getVideoIndex(videoId);
