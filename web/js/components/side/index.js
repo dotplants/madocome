@@ -9,6 +9,7 @@ import Icon from '../icon';
 import { Menu, MenuHr, MenuItem } from '../menu';
 import Alert from '../alert';
 import Comment from '../comment';
+import Post from './post';
 
 const Side = styled.div({
   height: '100vh',
@@ -43,14 +44,6 @@ const Comments = styled.div({
   flexDirection: 'column-reverse'
 });
 
-const StyledPostWrapper = styled.div({
-  background: props => lighten(0.25, props.theme.bgBase),
-  boxShadow: props => props.theme.shadow,
-  gridRow: 3,
-  gridColumn: 1,
-  padding: '15px'
-});
-
 const StyledMenu = styled(Menu)({
   bottom: 'initial',
   top: '15px',
@@ -65,7 +58,6 @@ const ColorBlock = styled.span({
   background: props => props.bg
 });
 
-const commentGetter = {};
 const commentTokens = {};
 const TIMEOUT = 10000;
 
@@ -80,6 +72,8 @@ const Sidebar = props => {
   const [menuOpened, setMenuOpened] = useState(false);
   const [prevVideos, setPrevVideos] = useState([]);
   const [comments, setComments] = useState([]);
+  const users = useState({});
+  const [commentGetter, setCommentGetter] = useState({});
   const token = getConfig('access_token', 'live_token');
 
   const delayAdd = (items, index = 0, wait = 100) => {
@@ -148,71 +142,103 @@ const Sidebar = props => {
       v => !videos.find(video => video.id === v.id)
     );
 
-    newVideo.forEach(video => {
-      fetch(
-        `https://www.googleapis.com/youtube/v3/videos?part=liveStreamingDetails&id=${video.id}&maxResults=1`,
-        {
-          method: 'GET',
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
+    newVideo.forEach(addCommentGetter);
+    removedVideo.forEach(removeCommentGetter);
+
+    setPrevVideos(JSON.parse(JSON.stringify(videos)));
+  }, [videos]);
+
+  const addCommentGetter = (video, isForce = false) => {
+    if (commentGetter[video.id]) return;
+    if (video.hideComment && !isForce) return;
+
+    fetch(
+      `https://www.googleapis.com/youtube/v3/videos?part=liveStreamingDetails&id=${video.id}&maxResults=1`,
+      {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${token}`
         }
-      )
-        .then(response => response.json())
-        .then(data => {
-          if (
-            !data.items ||
-            !data.items[0] ||
-            !data.items[0].liveStreamingDetails
-          ) {
-            return setComments(prev =>
-              insertTop(prev, {
-                isSystem: true,
-                body: `システムエラー: "${video.id}" のデータを取得できませんでした。`
-              })
-            );
-          }
-
-          commentGetter[video.id] = setInterval(
-            () =>
-              getComment(
-                video.id,
-                data.items[0].liveStreamingDetails.activeLiveChatId
-              ),
-            TIMEOUT
-          );
-
+      }
+    )
+      .then(response => response.json())
+      .then(data => {
+        if (data.error) {
           return setComments(prev =>
             insertTop(prev, {
               isSystem: true,
               video,
-              body: `チャットの受信を開始しました✨`
+              body: `システムエラー: ${JSON.stringify(data.error)}`
             })
           );
-        })
-        .catch(e => {
-          console.error(e);
+        }
+        if (
+          !data.items ||
+          !data.items[0] ||
+          !data.items[0].liveStreamingDetails
+        ) {
           return setComments(prev =>
             insertTop(prev, {
+              video,
               isSystem: true,
-              body: `システムエラー: "${video.id}" のデータ取得中にエラーが発生しました。トークンが使用できないか、間違った動画IDの可能性があります。`
+              body: `システムエラー: データを取得できませんでした。`
             })
           );
-        });
-    });
-    removedVideo.forEach(video => {
-      clearInterval(commentGetter[video.id]);
-      return setComments(prev =>
-        insertTop(prev, {
-          isSystem: true,
-          video,
-          body: `チャットの受信を終了しました🌙`
-        })
-      );
-    });
+        }
 
-    setPrevVideos(JSON.parse(JSON.stringify(videos)));
-  }, [videos]);
+        const liveChatId = data.items[0].liveStreamingDetails.activeLiveChatId;
+        setVideo(video.id, {
+          liveChatId,
+          hideComment: false
+        });
+        setCommentGetter(prev => ({
+          ...prev,
+          [video.id]: setInterval(
+            () => getComment(video.id, liveChatId),
+            TIMEOUT
+          )
+        }));
+        getComment(video.id, liveChatId);
+
+        return setComments(prev =>
+          insertTop(prev, {
+            isSystem: true,
+            video,
+            body: `チャットの受信を開始しました✨`
+          })
+        );
+      })
+      .catch(e => {
+        console.error(e);
+        return setComments(prev =>
+          insertTop(prev, {
+            isSystem: true,
+            body: `システムエラー: "${video.id}" のデータ取得中にエラーが発生しました。トークンが使用できないか、間違った動画IDの可能性があります。`
+          })
+        );
+      });
+  };
+
+  const removeCommentGetter = video => {
+    if (!commentGetter[video.id]) return;
+    clearInterval(commentGetter[video.id]);
+    setCommentGetter(prev => ({
+      ...prev,
+      [video.id]: null
+    }));
+    if (getVideoIndex(video.id) !== -1) {
+      setVideo(video.id, {
+        hideComment: true
+      });
+    }
+    return setComments(prev =>
+      insertTop(prev, {
+        isSystem: true,
+        video,
+        body: `チャットの受信を終了しました🌙`
+      })
+    );
+  };
 
   const settings = {
     hide_username: useState(getConfig('comment_hide_username') || false),
@@ -251,20 +277,14 @@ const Sidebar = props => {
           {videos.map(video => (
             <MenuItem
               onClick={() =>
-                setVideo(video.id, {
-                  hideComment: !videos[getVideoIndex(video.id)].hideComment
-                })
+                video.hideComment
+                  ? addCommentGetter(video, true)
+                  : removeCommentGetter(video)
               }
               key={video.id}
             >
-              <Icon
-                icon={
-                  !videos[getVideoIndex(video.id)].hideComment
-                    ? 'check-square'
-                    : 'square'
-                }
-              />{' '}
-              <ColorBlock bg={video.color} /> コメントを表示
+              <Icon icon={!video.hideComment ? 'check-square' : 'square'} />{' '}
+              <ColorBlock bg={video.color} /> コメントを受信
             </MenuItem>
           ))}
           {!videos[0] && (
@@ -313,12 +333,12 @@ const Sidebar = props => {
               comment={comment}
               key={comment.id || key}
               settings={settings}
-              videos={videos}
+              users={users}
             />
           ))}
       </Comments>
 
-      <StyledPostWrapper>投稿ボックス [WIP]</StyledPostWrapper>
+      <Post videos={videos} />
     </Side>
   );
 };

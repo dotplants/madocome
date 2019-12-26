@@ -47,15 +47,12 @@ const Index = () => {
   const [videos, setVideos] = useState(getConfig('videos') || []);
 
   const addVideo = () => {
-    if (!navigator.clipboard) {
-      return alert('エラー: このブラウザはクリップボードの取得ができません。');
-    }
-    navigator.clipboard.readText().then(data => {
+    const resolve = data => {
       const obj = data.match(youtubeRegExp) || [];
       const id = obj[3];
       if (!id) {
         return alert(
-          '抽出できませんでした: youtubeのURLをクリップボードにコピーしてください。'
+          '解析できませんでした: youtubeのURLでない可能性があります。'
         );
       }
       if (videos.find(video => video.id === id)) {
@@ -80,7 +77,17 @@ const Index = () => {
         setConfig('videos', prev);
         return prev;
       });
-    });
+    };
+
+    if ('clipboard' in navigator && navigator.clipboard.readText) {
+      navigator.clipboard.readText().then(resolve);
+    } else {
+      const data = prompt(
+        'YouTube URLを貼り付けてください: (クリップボード読み取りに対応していないブラウザ)',
+        ''
+      );
+      resolve(data);
+    }
   };
 
   const updateVideo = (id, command, value) => {

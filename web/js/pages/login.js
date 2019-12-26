@@ -4,6 +4,7 @@ import { Redirect } from 'react-router-dom';
 import { resetConfig } from '../utils/config';
 
 const CLIENT_ID =
+  process.env.CLIENT_ID ||
   '671635918752-19qo63itldo19b9k91dpr67r7424t008.apps.googleusercontent.com';
 
 const Login = () => {
