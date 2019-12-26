@@ -10,6 +10,7 @@ import { Menu, MenuHr, MenuItem } from '../menu';
 import Alert from '../alert';
 import Comment from '../comment';
 import Post from './post';
+import queryBuilder from '../../utils/query-builder';
 
 const Side = styled.div(({ theme }) => ({
   height: '100vh',
@@ -76,24 +77,16 @@ const Sidebar = props => {
   const [commentGetter, setCommentGetter] = useState({});
   const token = getConfig('access_token', 'live_token');
 
-  const delayAdd = (items, index = 0, wait = 100) => {
-    if (items[index]) {
-      setComments(prev => insertTop(prev, items[index]));
-    }
-    if (items[index + 1]) {
-      setTimeout(() => delayAdd(items, index + 1), wait);
-    }
-  };
-
   const getComment = (videoId, liveChatId) => {
-    let url = `https://www.googleapis.com/youtube/v3/liveChat/messages?part=snippet,authorDetails&liveChatId=${liveChatId}`;
-    if (commentTokens[videoId]) {
-      url += `&pageToken=${commentTokens[videoId]}`;
-    } else {
-      url += `&maxResults=200`;
-    }
+    const opts = {
+      part: 'snippet,authorDetails',
+      liveChatId
+    };
+    if (commentTokens[videoId]) opts.pageToken = commentTokens[videoId];
+    else opts.maxResults = 200;
+    const query = queryBuilder(opts);
 
-    fetch(url, {
+    fetch(`https://www.googleapis.com/youtube/v3/liveChat/messages?${query}`, {
       method: 'GET',
       headers: {
         Authorization: `Bearer ${token}`
@@ -104,7 +97,7 @@ const Sidebar = props => {
         if (nextPageToken) {
           commentTokens[videoId] = nextPageToken;
         }
-        if (!items) {
+        if (!items || !items[0]) {
           return;
         }
 
@@ -117,7 +110,15 @@ const Sidebar = props => {
             .slice(-8);
           return item;
         });
-        delayAdd(items, 0, TIMEOUT / items);
+
+        let index = 0;
+        const delay = setInterval(() => {
+          setComments(prev => insertTop(prev, items[index]));
+          index++;
+          if (!items[index]) {
+            clearInterval(delay);
+          }
+        }, TIMEOUT / items.length);
       });
   };
 
@@ -152,15 +153,18 @@ const Sidebar = props => {
     if (commentGetter[video.id]) return;
     if (video.hideComment && !isForce) return;
 
-    fetch(
-      `https://www.googleapis.com/youtube/v3/videos?part=liveStreamingDetails&id=${video.id}&maxResults=1`,
-      {
-        method: 'GET',
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
+    const query = queryBuilder({
+      part: 'liveStreamingDetails',
+      id: video.id,
+      maxResults: 1
+    });
+
+    fetch(`https://www.googleapis.com/youtube/v3/videos?${query}`, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`
       }
-    )
+    })
       .then(response => response.json())
       .then(({ error, items }) => {
         if (error) {

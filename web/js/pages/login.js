@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Redirect } from 'react-router-dom';
 
 import { resetConfig } from '../utils/config';
+import queryBuilder from '../utils/query-builder';
 
 const CLIENT_ID =
   process.env.CLIENT_ID ||
@@ -20,14 +21,9 @@ const Login = () => {
       ].join(' '),
       response_type: 'token'
     };
+    const query = queryBuilder(opts);
 
-    const query = Object.keys(opts).map(
-      key => `${key}=${encodeURIComponent(opts[key])}`
-    );
-
-    location.href = `https://accounts.google.com/o/oauth2/auth?${query.join(
-      '&'
-    )}`;
+    location.href = `https://accounts.google.com/o/oauth2/auth?${query}`;
     return;
   }
 

@@ -72,8 +72,7 @@ const Post = ({ videos }) => {
   const token = getConfig('access_token', 'live_token');
 
   const toggleMenuOpened = () => setMenuOpened(prev => !prev);
-  const getVideoIndex = videoId =>
-    videos.findIndex(video => video.id === videoId);
+  const getVideoIndex = videoId => videos.findIndex(({ id }) => id === videoId);
 
   useEffect(() => {
     if (!menuOpened) return;
@@ -94,25 +93,22 @@ const Post = ({ videos }) => {
     }
 
     setSubmitting(true);
-    fetch(
-      `https://www.googleapis.com/youtube/v3/liveChat/messages?part=snippet`,
-      {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          snippet: {
-            liveChatId: video.liveChatId,
-            type: 'textMessageEvent',
-            textMessageDetails: {
-              messageText: value
-            }
+    fetch(`https://www.googleapis.com/youtube/v3/liveChat/messages`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        snippet: {
+          liveChatId: video.liveChatId,
+          type: 'textMessageEvent',
+          textMessageDetails: {
+            messageText: value
           }
-        })
-      }
-    )
+        }
+      })
+    })
       .then(response => response.json())
       .then(data => {
         setSubmitting(false);
