@@ -49,8 +49,8 @@ const Login = () => {
       `https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=${query.access_token}`
     )
       .then(response => response.json())
-      .then(json => {
-        if (json.audience !== CLIENT_ID) {
+      .then(({ audience }) => {
+        if (audience !== CLIENT_ID) {
           return alert(
             'データが改ざんされている可能性があるため使用できません。'
           );

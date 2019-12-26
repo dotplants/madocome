@@ -5,19 +5,18 @@ import styled from 'styled-components';
 import Icon from './icon';
 import { Menu, MenuItem, MenuHr } from './menu';
 
-const MenuButton = styled.div({
+const MenuButton = styled.div(({ bg }) => ({
   cursor: 'pointer',
   width: '25px',
   height: '25px',
   position: 'absolute',
   bottom: '15px',
   right: '15px',
-  background: props => props.bg
-});
+  background: bg
+}));
 
-const Player = props => {
+const Player = ({ video, updateVideo }) => {
   const [menuOpened, setMenuOpened] = useState(false);
-  const { video, updateVideo } = props;
 
   const toggleMenuOpened = () => setMenuOpened(prev => !prev);
 

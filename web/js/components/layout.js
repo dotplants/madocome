@@ -1,13 +1,13 @@
 import styled from 'styled-components';
 
-export const Wrapper = styled.div({
+export const Wrapper = styled.div(({ hideSide }) => ({
   height: '100%',
   display: 'grid',
   gridTemplateRows: '1fr',
-  gridTemplateColumns: props => (props.hideSide ? '1fr' : '1fr 400px')
-});
+  gridTemplateColumns: hideSide ? '1fr' : '1fr 400px'
+}));
 
-export const Main = styled.div({
+export const Main = styled.div(({ useTop }) => ({
   height: '100%',
   gridRow: 1,
   gridColumn: 1,
@@ -15,5 +15,5 @@ export const Main = styled.div({
   flexWrap: 'wrap',
   justifyContent: 'center',
   alignItems: 'center',
-  alignContent: props => (props.useTop ? 'flex-start' : 'center')
-});
+  alignContent: useTop ? 'flex-start' : 'center'
+}));

@@ -5,31 +5,27 @@ import { darken } from 'polished';
 
 import Icon from './icon';
 
-const StyledNoVideo = styled.div({
+const StyledNoVideo = styled.div(({ theme }) => ({
   textAlign: 'center',
-  color: props => darken(0.45, props.theme.text)
-});
+  color: darken(0.45, theme.text)
+}));
 
 const AddButton = styled.b({
   cursor: 'pointer'
 });
 
-const NoVideo = props => {
-  const { addVideo } = props;
-
-  return (
-    <StyledNoVideo>
-      YouTube の URL をクリップボードにコピーして、
-      <div style={{ fontSize: '2rem' }}>
-        <AddButton onClick={addVideo}>
-          <Icon icon="plus" />
-          ボタン
-        </AddButton>
-        で開始
-      </div>
-    </StyledNoVideo>
-  );
-};
+const NoVideo = ({ addVideo }) => (
+  <StyledNoVideo>
+    YouTube の URL をクリップボードにコピーして、
+    <div style={{ fontSize: '2rem' }}>
+      <AddButton onClick={addVideo}>
+        <Icon icon="plus" />
+        ボタン
+      </AddButton>
+      で開始
+    </div>
+  </StyledNoVideo>
+);
 
 NoVideo.propTypes = {
   addVideo: PropTypes.func.isRequired
