@@ -93,22 +93,25 @@ const Post = ({ videos }) => {
     }
 
     setSubmitting(true);
-    fetch(`https://www.googleapis.com/youtube/v3/liveChat/messages`, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        snippet: {
-          liveChatId: video.liveChatId,
-          type: 'textMessageEvent',
-          textMessageDetails: {
-            messageText: value
+    fetch(
+      `https://www.googleapis.com/youtube/v3/liveChat/messages?part=snippet`,
+      {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          snippet: {
+            liveChatId: video.liveChatId,
+            type: 'textMessageEvent',
+            textMessageDetails: {
+              messageText: value
+            }
           }
-        }
-      })
-    })
+        })
+      }
+    )
       .then(response => response.json())
       .then(data => {
         setSubmitting(false);

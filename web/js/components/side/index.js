@@ -77,6 +77,8 @@ const Sidebar = props => {
   const [commentGetter, setCommentGetter] = useState({});
   const token = getConfig('access_token', 'live_token');
 
+  const getVideoIndex = videoId =>
+    videos.findIndex(video => video.id === videoId);
   const getComment = (videoId, liveChatId) => {
     const opts = {
       part: 'snippet,authorDetails',
@@ -204,7 +206,7 @@ const Sidebar = props => {
           insertTop(prev, {
             isSystem: true,
             video,
-            body: `チャットの受信を開始しました✨`
+            body: `コメントの受信を開始しました✨`
           })
         );
       })
@@ -235,7 +237,7 @@ const Sidebar = props => {
       insertTop(prev, {
         isSystem: true,
         video,
-        body: `チャットの受信を終了しました🌙`
+        body: `コメントの受信を終了しました🌙`
       })
     );
   };
@@ -253,19 +255,17 @@ const Sidebar = props => {
 
   const toggleMenuOpened = () => setMenuOpened(prev => !prev);
 
-  const getVideoIndex = videoId =>
-    videos.findIndex(video => video.id === videoId);
   const setVideo = (videoId, data) =>
     setVideos(prev => {
-      const index = getVideoIndex(videoId);
-      if (index !== -1) return prev;
-      const videoData = prev[index];
-      prev[index] = null;
-      prev.splice(index, 0, {
-        ...videoData,
-        ...data
-      });
-      prev = prev.filter(video => video);
+      const index = prev.findIndex(({ id }) => id === videoId);
+      if (index === -1) return prev;
+      prev[index] = Object.assign(
+        {},
+        {
+          ...prev[index],
+          ...data
+        }
+      );
 
       setConfig('videos', prev);
       return prev;
