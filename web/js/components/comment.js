@@ -89,13 +89,19 @@ const Comment = ({ comment, settings }) => {
             {!settings.hide_username[0] && (
               <UserName>{author.displayName}</UserName>
             )}
-            {author.isChatOwner && <AvatarBadge icon="crown" color="#ffc107" />}
-            {author.isChatModerator && (
-              <AvatarBadge icon="wrench" color="#036eec" />
+            {author.isChatOwner && (
+              <AvatarBadge
+                icon="crown"
+                color="#ffc107"
+                title="チャンネルオーナー"
+              />
             )}
-            {author.isVerified && <AvatarBadge icon="check" />}
+            {author.isChatModerator && (
+              <AvatarBadge icon="wrench" color="#036eec" title="モデレーター" />
+            )}
+            {author.isVerified && <AvatarBadge icon="check" title="確認済み" />}
             {author.isChatSponsor && (
-              <AvatarBadge icon="star" color="#28a745" />
+              <AvatarBadge icon="star" color="#28a745" title="メンバーシップ" />
             )}
           </UserLink>
         )}
