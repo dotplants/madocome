@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { lighten } from 'polished';
 
@@ -91,7 +90,7 @@ const Sidebar = props => {
     fetch(`https://www.googleapis.com/youtube/v3/liveChat/messages?${query}`, {
       method: 'GET',
       headers: {
-        Authorization: `Bearer ${token}`
+        Authorization: `Bearer ${getConfig('access_token', 'live_token')}`
       }
     })
       .then(response => response.json())
@@ -164,7 +163,7 @@ const Sidebar = props => {
     fetch(`https://www.googleapis.com/youtube/v3/videos?${query}`, {
       method: 'GET',
       headers: {
-        Authorization: `Bearer ${token}`
+        Authorization: `Bearer ${getConfig('access_token', 'live_token')}`
       }
     })
       .then(response => response.json())
@@ -324,7 +323,7 @@ const Sidebar = props => {
       <Comments>
         {!token && (
           <Alert>
-            コメントを表示・投稿するには <Link to="/login">ログイン</Link>{' '}
+            コメントを表示・投稿するには<a href="/api/auth-login">ログイン</a>
             してください。
           </Alert>
         )}

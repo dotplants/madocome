@@ -5,6 +5,7 @@ import { Normalize } from 'styled-normalize';
 import { lighten, darken } from 'polished';
 
 import Routes from './routes';
+import autoRefreshToken from './utils/refresh-token';
 
 const bgBase = '#000';
 const textBase = '#fff';
@@ -43,6 +44,7 @@ const GlobalStyle = createGlobalStyle({
   }
 });
 
+autoRefreshToken();
 const App = () => (
   <ThemeProvider theme={theme}>
     <Normalize />

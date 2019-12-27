@@ -69,7 +69,6 @@ const Post = ({ videos }) => {
   const [commentId, setCommentId] = useState('');
   const [menuOpened, setMenuOpened] = useState(false);
   const [isSubmitting, setSubmitting] = useState(false);
-  const token = getConfig('access_token', 'live_token');
 
   const toggleMenuOpened = () => setMenuOpened(prev => !prev);
   const getVideoIndex = videoId => videos.findIndex(({ id }) => id === videoId);
@@ -83,6 +82,7 @@ const Post = ({ videos }) => {
 
   const post = () => {
     const video = videos[getVideoIndex(commentId)];
+    const token = getConfig('access_token', 'live_token');
     if (!video || !video.liveChatId) {
       return alert(
         '動画が読み込まれていないか、コメントの受信が開始されていません。'
