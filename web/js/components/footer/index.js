@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { lighten } from 'polished';
 
+import Container from '../../container';
 import ExternalLink from '../external-link';
 import Icon from '../icon';
-import { getConfig, getStringData, setConfig } from '../../utils/config';
+import { getStringData } from '../../utils/config';
 
 const base = styled.div(({ theme }) => ({
   position: 'fixed',
@@ -38,30 +39,10 @@ const MarginLeft = {
   marginLeft: '1.5rem'
 };
 
-const Footer = ({ setUseTop, useTop, setHideSide, hideSide, addVideo }) => {
-  const [isSmall, setIsSmall] = useState(getConfig('footer_is_small') || false);
+const Footer = ({ addVideo }) => {
+  const { conf, setConf } = Container.useContainer();
 
-  const toggleSmall = () =>
-    setIsSmall(prev => {
-      const next = !prev;
-      setConfig('footer_is_small', next);
-      return next;
-    });
-
-  const toggleHideSide = () =>
-    setHideSide(prev => {
-      const next = !prev;
-      setConfig('hide_side', next);
-      return next;
-    });
-
-  const toggleUseTop = () =>
-    setUseTop(prev => {
-      const next = !prev;
-      setConfig('main_use_top', next);
-      return next;
-    });
-
+  const toggleSmall = () => setConf('footer_is_small', !conf.footer_is_small);
   const generateLink = () => {
     const data = encodeURIComponent(getStringData());
     return prompt(
@@ -72,13 +53,13 @@ const Footer = ({ setUseTop, useTop, setHideSide, hideSide, addVideo }) => {
 
   return (
     <>
-      {isSmall && (
+      {conf.footer_is_small && (
         <SmallButton onClick={toggleSmall} title="メニューを開く">
           <Icon icon="window-maximize" />
         </SmallButton>
       )}
 
-      {!isSmall && (
+      {!conf.footer_is_small && (
         <StyledFooter>
           <Right>
             <b>
@@ -100,16 +81,16 @@ const Footer = ({ setUseTop, useTop, setHideSide, hideSide, addVideo }) => {
           />
 
           <Icon
-            icon={hideSide ? 'comment' : 'comment-slash'}
-            onClick={toggleHideSide}
-            title={`コメントを${hideSide ? '開く' : '閉じる'}`}
+            icon={conf.hide_side ? 'comment' : 'comment-slash'}
+            onClick={() => setConf('hide_side', !conf.hide_side)}
+            title={`コメントを${conf.hide_side ? '開く' : '閉じる'}`}
             style={MarginLeft}
           />
 
           <Icon
-            icon={useTop ? 'compress' : 'angle-double-up'}
-            onClick={toggleUseTop}
-            title={`動画を${useTop ? '中央' : '上部'}に設置`}
+            icon={conf.use_top ? 'compress' : 'angle-double-up'}
+            onClick={() => setConf('use_top', !conf.use_top)}
+            title={`動画を${conf.use_top ? '中央' : '上部'}に設置`}
             style={MarginLeft}
           />
 
@@ -133,10 +114,6 @@ const Footer = ({ setUseTop, useTop, setHideSide, hideSide, addVideo }) => {
 };
 
 Footer.propTypes = {
-  setUseTop: PropTypes.func.isRequired,
-  useTop: PropTypes.bool.isRequired,
-  setHideSide: PropTypes.func.isRequired,
-  hideSide: PropTypes.bool.isRequired,
   addVideo: PropTypes.func.isRequired
 };
 

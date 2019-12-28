@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
 
 import Container from '../../container';
-import { getConfig, setConfig } from '../../utils/config';
+import { getConfig } from '../../utils/config';
 import Icon from '../icon';
 import { MenuHr, MenuItem } from '../menu';
 import Alert from '../alert';
@@ -21,9 +20,15 @@ import {
 const commentTokens = {};
 const TIMEOUT = 10000;
 
-const Sidebar = props => {
-  const { isHide } = props;
-  const { comments, videos, setVideo, addComment } = Container.useContainer();
+const Sidebar = () => {
+  const {
+    comments,
+    videos,
+    setVideo,
+    addComment,
+    conf,
+    setConf
+  } = Container.useContainer();
   const [menuOpened, setMenuOpened] = useState(false);
   const [prevVideos, setPrevVideos] = useState([]);
   const [commentGetter, setCommentGetter] = useState({});
@@ -202,21 +207,10 @@ const Sidebar = props => {
     });
   };
 
-  const settings = {
-    hide_username: useState(getConfig('comment_hide_username') || false),
-    hide_longtext: useState(getConfig('comment_hide_longtext') || false)
-  };
-  const toggleCommentSettings = key =>
-    settings[key][1](prev => {
-      const next = !prev;
-      setConfig(key, next);
-      return next;
-    });
-
   const toggleMenuOpened = () => setMenuOpened(prev => !prev);
 
   return (
-    <Side isHide={isHide}>
+    <Side isHide={conf.hide_side}>
       {menuOpened && (
         <StyledMenu>
           {videos.map(video => (
@@ -238,16 +232,16 @@ const Sidebar = props => {
             </MenuItem>
           )}
           <MenuHr />
-          <MenuItem onClick={() => toggleCommentSettings('hide_username')}>
-            <Icon
-              icon={settings.hide_username[0] ? 'check-square' : 'square'}
-            />{' '}
+          <MenuItem
+            onClick={() => setConf('hide_username', !conf.hide_username)}
+          >
+            <Icon icon={conf.hide_username ? 'check-square' : 'square'} />{' '}
             ユーザ名を表示しない
           </MenuItem>
-          <MenuItem onClick={() => toggleCommentSettings('hide_longtext')}>
-            <Icon
-              icon={settings.hide_longtext[0] ? 'check-square' : 'square'}
-            />{' '}
+          <MenuItem
+            onClick={() => setConf('hide_longtext', !conf.hide_longtext)}
+          >
+            <Icon icon={conf.hide_longtext ? 'check-square' : 'square'} />{' '}
             長文コメントを畳む
           </MenuItem>
           <MenuHr />
@@ -274,21 +268,13 @@ const Sidebar = props => {
         )}
         {token &&
           comments.map((comment, key) => (
-            <Comment
-              comment={comment}
-              key={comment.id || key}
-              settings={settings}
-            />
+            <Comment comment={comment} key={comment.id || key} />
           ))}
       </Comments>
 
       <Post videos={videos} />
     </Side>
   );
-};
-
-Sidebar.propTypes = {
-  isHide: PropTypes.bool.isRequired
 };
 
 export default Sidebar;

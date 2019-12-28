@@ -5,6 +5,7 @@ import Alert from './alert';
 import ExternalLink from './external-link';
 import { darken } from 'polished';
 import Icon from './icon';
+import Container from '../container';
 
 const StyledComment = styled.div(({ color, hideLong }) => ({
   borderLeft: `solid 3px ${color}`,
@@ -42,21 +43,9 @@ const AvatarBadge = styled(Icon)(({ color }) => ({
   color: color || 'initial'
 }));
 
-/*
-const getUser = (userId, video) => new Promise((resolve, reject) => {
-  fetch('', {
-    method: 'GET',
-    headers: {
-      Authorization: `Bearer ${token}`
-    }
-  })
-    .then(response => response.json())
-    .then(resolve);
-    .catch(reject);
-});
-*/
+const Comment = ({ comment }) => {
+  const { conf } = Container.useContainer();
 
-const Comment = ({ comment, settings }) => {
   if (comment.isSystem) {
     const style = {};
     if (comment.video) {
@@ -67,28 +56,13 @@ const Comment = ({ comment, settings }) => {
   }
 
   const author = comment.authorDetails;
-  /*
-  const userId = comment.snippet.authorChannelId;
-  const author = users[0][`${video.id}_${userId}`];
-  if (!author && userId) {
-    getUser(userId, video).then(user => users[1](prev => ({
-      ...prev,
-      [`${video.id}_${userId}`]: user
-    }))); // setUsers
-  }
-  */
   if (comment.snippet.textMessageDetails) {
     return (
-      <StyledComment
-        color={comment.video.color}
-        hideLong={settings.hide_longtext[0]}
-      >
+      <StyledComment color={comment.video.color} hideLong={conf.hide_longtext}>
         {author && (
           <UserLink href={author.channelUrl}>
             <Avatar src={author.profileImageUrl} />
-            {!settings.hide_username[0] && (
-              <UserName>{author.displayName}</UserName>
-            )}
+            {!conf.hide_username && <UserName>{author.displayName}</UserName>}
             {author.isChatOwner && (
               <AvatarBadge
                 icon="crown"
@@ -112,8 +86,7 @@ const Comment = ({ comment, settings }) => {
 };
 
 Comment.propTypes = {
-  comment: PropTypes.object.isRequired,
-  settings: PropTypes.object.isRequired
+  comment: PropTypes.object.isRequired
 };
 
 export default Comment;

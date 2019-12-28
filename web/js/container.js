@@ -10,7 +10,10 @@ const insertTop = (element, newValue) => {
 
 const Container = () => {
   const [comments, setComments] = useState([]);
-  const [videos, SetVideos] = useState(getConfig('videos') || []);
+  const [Videos, SetVideos] = useState(getConfig('videos') || []);
+  const [Conf, SetConf] = useState(JSON.stringify(getConfig('conf') || {}));
+  const conf = JSON.parse(Conf);
+  const videos = Videos.filter(v => v);
 
   useEffect(() => {
     if (comments.length > 300) {
@@ -23,9 +26,13 @@ const Container = () => {
 
   const addComment = data => setComments(prev => insertTop(prev, data));
   const setVideos = func => {
-    const newState = SetVideos(func);
-    setConfig('videos', newState);
-    return newState;
+    SetVideos(func);
+    setConfig('videos', videos);
+  };
+  const setConf = (key, value) => {
+    conf[key] = value;
+    SetConf(JSON.stringify(conf));
+    setConfig('conf', conf);
   };
   const setVideo = (videoId, data) =>
     setVideos(prev => {
@@ -47,7 +54,9 @@ const Container = () => {
     videos,
     setVideos,
     setVideo,
-    addComment
+    addComment,
+    conf,
+    setConf
   };
 };
 

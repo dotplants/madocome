@@ -6,9 +6,8 @@ import { getStringData } from '../utils/config';
 
 const types = {
   version: PropTypes.number.isRequired,
-  footer_is_small: PropTypes.bool,
-  hide_side: PropTypes.bool,
-  videos: QueryTypes.arrayWithLength(0, 16)
+  videos: QueryTypes.arrayWithLength(0, 16),
+  config: PropTypes.object
 };
 
 const Shared = () => {
