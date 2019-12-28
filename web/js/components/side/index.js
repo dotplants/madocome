@@ -94,7 +94,24 @@ const Sidebar = props => {
       }
     })
       .then(response => response.json())
-      .then(({ nextPageToken, items }) => {
+      .then(({ nextPageToken, items, error }) => {
+        if (error) {
+          console.error(error);
+          if (error.errors[0].reason === 'authError') {
+            setComments(prev =>
+              insertTop(prev, {
+                isSystem: true,
+                body: (
+                  <>
+                    トークンの有効期限が切れているようです。
+                    <a href="/login">ログイン</a>し直してください。
+                  </>
+                )
+              })
+            );
+          }
+          return;
+        }
         if (nextPageToken) {
           commentTokens[videoId] = nextPageToken;
         }
@@ -169,13 +186,27 @@ const Sidebar = props => {
       .then(response => response.json())
       .then(({ error, items }) => {
         if (error) {
-          return setComments(prev =>
+          setComments(prev =>
             insertTop(prev, {
               isSystem: true,
               video,
               body: `システムエラー: ${JSON.stringify(error)}`
             })
           );
+          if (error.errors[0].reason === 'authError') {
+            setComments(prev =>
+              insertTop(prev, {
+                isSystem: true,
+                body: (
+                  <>
+                    トークンの有効期限が切れているようです。
+                    <a href="/login">ログイン</a>し直してください。
+                  </>
+                )
+              })
+            );
+          }
+          return;
         }
         if (!items || !items[0] || !items[0].liveStreamingDetails) {
           return setComments(prev =>

@@ -5,7 +5,7 @@ const autoRefreshToken = () => {
   const expiresAt = getConfig('expires_at', 'live_token');
   if (!token || !expiresAt) return;
 
-  const timeout = expiresAt * 1000 - Date.now();
+  const timeout = (expiresAt - 10) * 1000 - Date.now();
   console.log(`will refresh at: ${timeout} (about: ${timeout / 1000}s)`);
   setTimeout(() => {
     fetch(`/api/auth-refresh?token=${token}`)
