@@ -15,7 +15,7 @@ const Login = () => {
 
     const opts = {
       client_id,
-      redirect_uri: `${location.origin}/login`,
+      redirect_uri: `${location.origin}/key-login`,
       scope: [
         'https://www.googleapis.com/auth/youtube.readonly',
         'https://www.googleapis.com/auth/youtube.force-ssl'

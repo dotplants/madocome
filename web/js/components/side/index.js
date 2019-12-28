@@ -61,7 +61,7 @@ const Sidebar = () => {
               body: (
                 <>
                   トークンの有効期限が切れているようです。
-                  <a href="/login">ログイン</a>し直してください。
+                  <a href="/api/auth-login">ログイン</a>し直してください。
                 </>
               )
             });
@@ -144,7 +144,7 @@ const Sidebar = () => {
               body: (
                 <>
                   トークンの有効期限が切れているようです。
-                  <a href="/login">ログイン</a>し直してください。
+                  <a href="/api/auth-login">ログイン</a>し直してください。
                 </>
               )
             });
