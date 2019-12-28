@@ -6,6 +6,7 @@ import { lighten, darken } from 'polished';
 
 import Routes from './routes';
 import autoRefreshToken from './utils/refresh-token';
+import Container from './container';
 
 const bgBase = '#000';
 const textBase = '#fff';
@@ -49,9 +50,11 @@ const App = () => (
   <ThemeProvider theme={theme}>
     <Normalize />
     <GlobalStyle />
-    <BrowserRouter>
-      <Routes />
-    </BrowserRouter>
+    <Container.Provider>
+      <BrowserRouter>
+        <Routes />
+      </BrowserRouter>
+    </Container.Provider>
   </ThemeProvider>
 );
 

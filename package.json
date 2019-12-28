@@ -18,7 +18,6 @@
     "dev": "now dev"
   },
   "devDependencies": {
-    "@babel/cli": "^7.7.7",
     "@babel/core": "^7.7.7",
     "@babel/preset-env": "^7.7.7",
     "@babel/preset-react": "^7.7.4",
@@ -28,7 +27,6 @@
     "cross-env": "^6.0.3",
     "eslint": "~6",
     "eslint-plugin-react": "^7.17.0",
-    "nodemon": "^2.0.2",
     "npm-run-all": "~4",
     "parcel-bundler": "~1",
     "prettier": "~1",
@@ -46,7 +44,8 @@
     "react-router-dom": "^5.1.2",
     "react-youtube": "^7.9.0",
     "styled-components": "^4.4.1",
-    "styled-normalize": "^8.0.6"
+    "styled-normalize": "^8.0.6",
+    "unstated-next": "^1.1.0"
   },
   "alias": {
     "react": "preact/compat",

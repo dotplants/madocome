@@ -1,78 +1,31 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
-import { lighten } from 'polished';
 
+import Container from '../../container';
 import { getConfig, setConfig } from '../../utils/config';
 import Icon from '../icon';
-import { Menu, MenuHr, MenuItem } from '../menu';
+import { MenuHr, MenuItem } from '../menu';
 import Alert from '../alert';
 import Comment from '../comment';
 import Post from './post';
 import queryBuilder from '../../utils/query-builder';
-
-const Side = styled.div(({ theme, isHide }) => ({
-  display: isHide ? 'none' : 'grid',
-  height: '100vh',
-  gridRow: 1,
-  gridColumn: 2,
-  background: lighten(0.18, theme.bgBase),
-  boxShadow: theme.shadow,
-  gridTemplateRows: 'auto 1fr auto',
-  gridTemplateColumns: '1fr'
-}));
-
-const Selector = styled.div(({ theme }) => ({
-  background: lighten(0.25, theme.bgBase),
-  boxShadow: theme.shadow,
-  gridRow: 1,
-  gridColumn: 1,
-  padding: '15px 20px',
-  cursor: 'pointer'
-}));
-
-const Right = styled.div({
-  float: 'right'
-});
-
-const Comments = styled.div({
-  gridRow: 2,
-  gridColumn: 1,
-  overflowY: 'scroll',
-  overflowX: 'hidden',
-  display: 'flex',
-  flexDirection: 'column-reverse'
-});
-
-const StyledMenu = styled(Menu)({
-  bottom: 'initial',
-  top: '15px',
-  right: '15px',
-  width: 400 - 15 * 2
-});
-
-const ColorBlock = styled.span(({ bg }) => ({
-  display: 'inline-block',
-  width: '1rem',
-  height: '1rem',
-  background: bg
-}));
+import {
+  Side,
+  Selector,
+  Right,
+  Comments,
+  StyledMenu,
+  ColorBlock
+} from './styles';
 
 const commentTokens = {};
 const TIMEOUT = 10000;
 
-const insertTop = (element, newValue) => {
-  const newElem = element.slice();
-  newElem.unshift(newValue);
-  return newElem;
-};
-
 const Sidebar = props => {
-  const { videos, setVideos, isHide } = props;
+  const { isHide } = props;
+  const { comments, videos, setVideo, addComment } = Container.useContainer();
   const [menuOpened, setMenuOpened] = useState(false);
   const [prevVideos, setPrevVideos] = useState([]);
-  const [comments, setComments] = useState([]);
-  const users = useState({});
   const [commentGetter, setCommentGetter] = useState({});
   const token = getConfig('access_token', 'live_token');
 
@@ -98,17 +51,15 @@ const Sidebar = props => {
         if (error) {
           console.error(error);
           if (error.errors[0].reason === 'authError') {
-            setComments(prev =>
-              insertTop(prev, {
-                isSystem: true,
-                body: (
-                  <>
-                    トークンの有効期限が切れているようです。
-                    <a href="/login">ログイン</a>し直してください。
-                  </>
-                )
-              })
-            );
+            addComment({
+              isSystem: true,
+              body: (
+                <>
+                  トークンの有効期限が切れているようです。
+                  <a href="/login">ログイン</a>し直してください。
+                </>
+              )
+            });
           }
           return;
         }
@@ -131,7 +82,7 @@ const Sidebar = props => {
 
         let index = 0;
         const delay = setInterval(() => {
-          setComments(prev => insertTop(prev, items[index]));
+          addComment(items[index]);
           index++;
           if (!items[index]) {
             clearInterval(delay);
@@ -139,15 +90,6 @@ const Sidebar = props => {
         }, TIMEOUT / items.length);
       });
   };
-
-  useEffect(() => {
-    if (comments.length > 300) {
-      setComments(prev => {
-        prev.length = 300;
-        return prev;
-      });
-    }
-  }, [comments]);
 
   useEffect(() => {
     const hasNullData = videos.find(v => !v);
@@ -186,36 +128,30 @@ const Sidebar = props => {
       .then(response => response.json())
       .then(({ error, items }) => {
         if (error) {
-          setComments(prev =>
-            insertTop(prev, {
-              isSystem: true,
-              video,
-              body: `システムエラー: ${JSON.stringify(error)}`
-            })
-          );
+          addComment({
+            isSystem: true,
+            video,
+            body: `システムエラー: ${JSON.stringify(error)}`
+          });
           if (error.errors[0].reason === 'authError') {
-            setComments(prev =>
-              insertTop(prev, {
-                isSystem: true,
-                body: (
-                  <>
-                    トークンの有効期限が切れているようです。
-                    <a href="/login">ログイン</a>し直してください。
-                  </>
-                )
-              })
-            );
+            addComment({
+              isSystem: true,
+              body: (
+                <>
+                  トークンの有効期限が切れているようです。
+                  <a href="/login">ログイン</a>し直してください。
+                </>
+              )
+            });
           }
           return;
         }
         if (!items || !items[0] || !items[0].liveStreamingDetails) {
-          return setComments(prev =>
-            insertTop(prev, {
-              video,
-              isSystem: true,
-              body: `システムエラー: データを取得できませんでした。`
-            })
-          );
+          return addComment({
+            video,
+            isSystem: true,
+            body: `システムエラー: データを取得できませんでした。`
+          });
         }
 
         const liveChatId = items[0].liveStreamingDetails.activeLiveChatId;
@@ -232,22 +168,18 @@ const Sidebar = props => {
         }));
         getComment(video.id, liveChatId);
 
-        return setComments(prev =>
-          insertTop(prev, {
-            isSystem: true,
-            video,
-            body: `コメントの受信を開始しました✨`
-          })
-        );
+        return addComment({
+          isSystem: true,
+          video,
+          body: `コメントの受信を開始しました✨`
+        });
       })
       .catch(e => {
         console.error(e);
-        return setComments(prev =>
-          insertTop(prev, {
-            isSystem: true,
-            body: `システムエラー: "${video.id}" のデータ取得中にエラーが発生しました。トークンが使用できないか、間違った動画IDの可能性があります。`
-          })
-        );
+        return addComment({
+          isSystem: true,
+          body: `システムエラー: "${video.id}" のデータ取得中にエラーが発生しました。トークンが使用できないか、間違った動画IDの可能性があります。`
+        });
       });
   };
 
@@ -263,13 +195,11 @@ const Sidebar = props => {
         hideComment: true
       });
     }
-    return setComments(prev =>
-      insertTop(prev, {
-        isSystem: true,
-        video,
-        body: `コメントの受信を終了しました🌙`
-      })
-    );
+    return addComment({
+      isSystem: true,
+      video,
+      body: `コメントの受信を終了しました🌙`
+    });
   };
 
   const settings = {
@@ -284,22 +214,6 @@ const Sidebar = props => {
     });
 
   const toggleMenuOpened = () => setMenuOpened(prev => !prev);
-
-  const setVideo = (videoId, data) =>
-    setVideos(prev => {
-      const index = prev.findIndex(({ id }) => id === videoId);
-      if (index === -1) return prev;
-      prev[index] = Object.assign(
-        {},
-        {
-          ...prev[index],
-          ...data
-        }
-      );
-
-      setConfig('videos', prev);
-      return prev;
-    });
 
   return (
     <Side isHide={isHide}>
@@ -364,7 +278,6 @@ const Sidebar = props => {
               comment={comment}
               key={comment.id || key}
               settings={settings}
-              users={users}
             />
           ))}
       </Comments>
@@ -375,8 +288,6 @@ const Sidebar = props => {
 };
 
 Sidebar.propTypes = {
-  videos: PropTypes.array.isRequired,
-  setVideos: PropTypes.func.isRequired,
   isHide: PropTypes.bool.isRequired
 };
 

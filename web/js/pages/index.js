@@ -1,39 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 
+import Container from '../container';
 import Footer from '../components/footer';
 import Player from '../components/youtube-player';
-import { getConfig, setConfig } from '../utils/config';
+import { getConfig } from '../utils/config';
 import { selectOneColor } from '../utils/colors';
 import { Main, Wrapper } from '../components/layout';
 import NoVideo from '../components/no-video';
 import Sidebar from '../components/side';
-
-const youtubeRegExp = /(.*?)(^|\/|v=)([a-z0-9_-]{11})(.*)?/im;
-
-const setRatio = length => {
-  switch (length) {
-    case 0:
-    case 1:
-      return 1.2;
-    case 2:
-    case 3:
-    case 4:
-      return 2.0;
-    case 5:
-    case 6:
-    case 7:
-    case 8:
-    case 9:
-      return 3.0;
-    case 10:
-    case 11:
-    case 12:
-      return 4.0;
-    default:
-      return 5.0;
-  }
-};
+import { youtubeRegExp, setRatio } from '../utils/env';
 
 const PlayerItem = styled.div({
   maxWidth: '100%',
@@ -41,10 +17,10 @@ const PlayerItem = styled.div({
 });
 
 const Index = () => {
+  const { videos, setVideos } = Container.useContainer();
   const [windowWidth, setWindowWidth] = useState(0);
   const [hideSide, setHideSide] = useState(getConfig('hide_side') || false);
   const [useTop, setUseTop] = useState(getConfig('main_use_top') || false);
-  const [videos, setVideos] = useState(getConfig('videos') || []);
 
   const addVideo = () => {
     const resolve = data => {
@@ -74,7 +50,6 @@ const Index = () => {
           }
           return video;
         });
-        setConfig('videos', prev);
         return prev;
       });
     };
@@ -99,17 +74,12 @@ const Index = () => {
 
     switch (command) {
       case 'remove':
-        return setVideos(prev => {
-          prev = prev.filter(video => video.id !== id);
-          setConfig('videos', prev);
-          return prev;
-        });
+        return setVideos(prev => prev.filter(video => video.id !== id));
       case 'move':
         return setVideos(prev => {
           prev[index] = null;
           prev.splice(index + (value === 'right' ? 2 : -1), 0, videoData);
           prev = prev.filter(video => video);
-          setConfig('videos', prev);
           return prev;
         });
       case 'resize':
@@ -123,8 +93,6 @@ const Index = () => {
             pinned: true
           });
           prev = prev.filter(video => video);
-
-          setConfig('videos', prev);
           return prev;
         });
       case 'reset':
@@ -136,8 +104,6 @@ const Index = () => {
             pinned: false
           });
           prev = prev.filter(video => video);
-
-          setConfig('videos', prev);
           return prev;
         });
       default:
@@ -174,7 +140,7 @@ const Index = () => {
           )}
           {!videos[0] && <NoVideo addVideo={addVideo} />}
         </Main>
-        <Sidebar videos={videos} setVideos={setVideos} isHide={hideSide} />
+        <Sidebar isHide={hideSide} />
       </Wrapper>
       <Footer
         setUseTop={setUseTop}
