@@ -2,10 +2,11 @@
 
 # [窓米 - madocome -](https://madocome.dotplants.net/)
 
-[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/dotplants/madocome/Node CI?style=flat-square)](https://github.com/dotplants/madocome/actions)
-[![GitHub](https://img.shields.io/github/license/dotplants/madocome?style=flat-square)](#license)
-[![code style: Prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://prettier.io/)
-[![deploy to now](https://img.shields.io/badge/deploy%20to-now-black?style=flat-square&logo=zeit)](https://zeit.co/new/project?template=https://github.com/dotplants/madocome)
+[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/dotplants/madocome/Node%20CI?style=for-the-badge)](https://github.com/dotplants/madocome/actions)
+[![GitHub](https://img.shields.io/github/license/dotplants/madocome?style=for-the-badge)](#license)
+[![code style: Prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=for-the-badge&logo=prettier)](https://prettier.io/)
+[![dependabot enabled](https://img.shields.io/badge/dependabot-enabled-0366D6.svg?style=for-the-badge&logo=dependabot)](https://github.com/dotplants/madocome/pulls?utf8=%E2%9C%93&q=is%3Apr+label%3Adependencies+)
+[![deploy to now](https://img.shields.io/badge/deploy%20to-%E2%96%B2%20now-black?style=for-the-badge)](https://zeit.co/new/project?template=https://github.com/dotplants/madocome)
 
 ## License
 
