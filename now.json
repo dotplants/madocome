@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "name": "live-viewer",
-  "alias": ["live-viewer.nzws.me"],
-  "scope": "nzws",
+  "name": "madocome",
+  "alias": ["madocome.dotplants.net"],
+  "scope": "dotplants",
   "regions": ["hnd1"],
   "public": false,
   "builds": [

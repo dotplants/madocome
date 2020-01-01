@@ -69,8 +69,8 @@ const Footer = ({ addVideo }) => {
           <Right>
             <b>
               <small>
-                <ExternalLink href="https://github.com/nzws/live-viewer">
-                  live-viewer
+                <ExternalLink href="https://github.com/dotplants/madocome">
+                  madocome
                 </ExternalLink>{' '}
                 built by{' '}
                 <ExternalLink href="https://nzws.me">@nzws_me</ExternalLink>{' '}
