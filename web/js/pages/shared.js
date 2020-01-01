@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useIntl } from 'react-intl';
 import { Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import QueryTypes from '@yuzulabo/query-types';
@@ -11,13 +12,14 @@ const types = {
 };
 
 const Shared = () => {
+  const { formatMessage } = useIntl();
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
     const data = decodeURIComponent(location.search.slice(1));
     if (
       getStringData() &&
-      !confirm('この設定を適用すると、現在の設定は失われます。よろしいですか？')
+      !confirm(formatMessage({ id: 'pages.shared.note' }))
     ) {
       return;
     }
@@ -27,7 +29,7 @@ const Shared = () => {
       const { valid, errors } = QueryTypes.check(types, parsed);
       if (!valid) {
         console.error(errors);
-        alert('この設定は不正なため使用できません。');
+        alert(formatMessage({ id: 'pages.shared.error_verify' }));
         return;
       }
 
@@ -35,7 +37,7 @@ const Shared = () => {
       setReady(true);
     } catch (e) {
       console.error(e);
-      alert('この設定は壊れているため使用できません。');
+      alert(formatMessage({ id: 'pages.shared.error_broken' }));
     }
   }, []);
 

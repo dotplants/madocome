@@ -9,7 +9,7 @@ const Login = () => {
   useEffect(() => {
     const query = JSON.parse(decodeURIComponent(location.search.slice(1)));
     if (!query.access_token) {
-      return alert('アクセストークンが取得できませんでした。');
+      return alert('Error: cannot get access token');
     }
 
     fetch(

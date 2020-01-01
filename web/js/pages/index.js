@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useIntl } from 'react-intl';
 import styled from 'styled-components';
 
 import Container from '../container';
@@ -16,6 +17,7 @@ const PlayerItem = styled.div({
 });
 
 const Index = () => {
+  const { formatMessage } = useIntl();
   const { videos, setVideos, conf } = Container.useContainer();
   const [windowWidth, setWindowWidth] = useState(0);
 
@@ -24,15 +26,13 @@ const Index = () => {
       const obj = data.match(youtubeRegExp) || [];
       const id = obj[3];
       if (!id) {
-        return alert(
-          '解析できませんでした: youtubeのURLでない可能性があります。'
-        );
+        return alert(formatMessage({ id: 'pages.index.error_url' }));
       }
       if (videos.find(video => video.id === id)) {
-        return alert('このURLは追加済みです。');
+        return alert(formatMessage({ id: 'pages.index.error_already' }));
       }
       if (videos.length > 12) {
-        return alert('12個まで追加できます。');
+        return alert(formatMessage({ id: 'pages.index.error_length' }));
       }
 
       const newVideo = {
@@ -54,10 +54,7 @@ const Index = () => {
     if ('clipboard' in navigator && navigator.clipboard.readText) {
       navigator.clipboard.readText().then(resolve);
     } else {
-      const data = prompt(
-        'YouTube URLを貼り付けてください: (クリップボード読み取りに対応していないブラウザ)',
-        ''
-      );
+      const data = prompt(formatMessage({ id: 'pages.index.paste_url' }), '');
       resolve(data);
     }
   };

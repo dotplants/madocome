@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useIntl, FormattedMessage } from 'react-intl';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { lighten } from 'polished';
@@ -65,6 +66,7 @@ const ColorBlock = styled.span(({ bg }) => ({
 }));
 
 const Post = ({ videos }) => {
+  const { formatMessage } = useIntl();
   const [value, setValue] = useState('');
   const [commentId, setCommentId] = useState('');
   const [menuOpened, setMenuOpened] = useState(false);
@@ -84,12 +86,10 @@ const Post = ({ videos }) => {
     const video = videos[getVideoIndex(commentId)];
     const token = getConfig('access_token', 'live_token');
     if (!video || !video.liveChatId) {
-      return alert(
-        '動画が読み込まれていないか、コメントの受信が開始されていません。'
-      );
+      return alert(formatMessage({ id: 'components.side.post.not_found' }));
     }
     if (!token) {
-      return alert('ログインしてください。');
+      return alert(formatMessage({ id: 'components.side.post.please_login' }));
     }
 
     setSubmitting(true);
@@ -125,7 +125,7 @@ const Post = ({ videos }) => {
       .catch(e => {
         setSubmitting(false);
         console.error(e);
-        return alert('システムエラー: コメントの投稿に失敗しました。');
+        return alert(formatMessage({ id: 'components.side.post.error' }));
       });
   };
 
@@ -139,16 +139,19 @@ const Post = ({ videos }) => {
       <Input
         type="text"
         value={value}
-        placeholder="コメントを投稿..."
+        placeholder={formatMessage({ id: 'components.side.post.placeholder' })}
         onChange={e => setValue(e.target.value)}
       />
 
       <Buttons>
         <Right>
-          {isSubmitting && <>やってます...</>}
+          {isSubmitting && (
+            <FormattedMessage id="components.side.post.posting_now" />
+          )}
           {!isSubmitting && (
             <PostButton onClick={post}>
-              <Icon icon="paper-plane" /> 投稿
+              <Icon icon="paper-plane" />{' '}
+              <FormattedMessage id="components.side.post.post" />
             </PostButton>
           )}
         </Right>
@@ -157,7 +160,12 @@ const Post = ({ videos }) => {
           <StyledMenu>
             {videos.map(video => (
               <MenuItem key={video.id} onClick={() => setCommentId(video.id)}>
-                <ColorBlock bg={video.color} /> でコメント
+                <FormattedMessage
+                  id="components.side.post.comment"
+                  values={{
+                    block: <ColorBlock bg={video.color} />
+                  }}
+                />
               </MenuItem>
             ))}
           </StyledMenu>
@@ -170,7 +178,7 @@ const Post = ({ videos }) => {
               style={{ marginRight: '5px' }}
             />
           )}
-          {!commentId && <>動画を選択</>}
+          {!commentId && <FormattedMessage id="components.side.post.select" />}
           <Icon icon="caret-up" />
         </PostConfig>
       </Buttons>

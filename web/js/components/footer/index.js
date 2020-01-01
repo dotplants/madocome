@@ -1,4 +1,5 @@
 import React from 'react';
+import { useIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { lighten } from 'polished';
@@ -40,13 +41,14 @@ const MarginLeft = {
 };
 
 const Footer = ({ addVideo }) => {
+  const { formatMessage } = useIntl();
   const { conf, setConf } = Container.useContainer();
 
   const toggleSmall = () => setConf('footer_is_small', !conf.footer_is_small);
   const generateLink = () => {
     const data = encodeURIComponent(getStringData());
     return prompt(
-      '今の時点での「どの動画を読み込んでいるか」「大きさなどの設定」を共有できます。次のリンクを他の人に共有してください:',
+      formatMessage({ id: 'components.footer.generate_link.desc' }),
       `${location.origin}/shared?${data}`
     );
   };
@@ -54,7 +56,10 @@ const Footer = ({ addVideo }) => {
   return (
     <>
       {conf.footer_is_small && (
-        <SmallButton onClick={toggleSmall} title="メニューを開く">
+        <SmallButton
+          onClick={toggleSmall}
+          title={formatMessage({ id: 'components.footer.open' })}
+        >
           <Icon icon="window-maximize" />
         </SmallButton>
       )}
@@ -77,34 +82,44 @@ const Footer = ({ addVideo }) => {
           <Icon
             icon="window-minimize"
             onClick={toggleSmall}
-            title="メニューを閉じる"
+            title={formatMessage({ id: 'components.footer.close' })}
           />
 
           <Icon
             icon={conf.hide_side ? 'comment' : 'comment-slash'}
             onClick={() => setConf('hide_side', !conf.hide_side)}
-            title={`コメントを${conf.hide_side ? '開く' : '閉じる'}`}
+            title={formatMessage({
+              id: `components.footer.hide_side.${
+                conf.hide_side ? 'open' : 'close'
+              }`
+            })}
             style={MarginLeft}
           />
 
           <Icon
             icon={conf.use_top ? 'compress' : 'angle-double-up'}
             onClick={() => setConf('use_top', !conf.use_top)}
-            title={`動画を${conf.use_top ? '中央' : '上部'}に設置`}
+            title={formatMessage({
+              id: `components.footer.align.to-${
+                conf.use_top ? 'center' : 'top'
+              }`
+            })}
             style={MarginLeft}
           />
 
           <Icon
             icon="plus"
             onClick={addVideo}
-            title="クリップボードからURLを読み込み"
+            title={formatMessage({ id: 'components.footer.open_player' })}
             style={MarginLeft}
           />
 
           <Icon
             icon="share-square"
             onClick={generateLink}
-            title="現在の状態をリンクにして共有"
+            title={formatMessage({
+              id: 'components.footer.generate_link.title'
+            })}
             style={MarginLeft}
           />
         </StyledFooter>

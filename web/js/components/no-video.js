@@ -1,4 +1,5 @@
 import React from 'react';
+import { FormattedMessage } from 'react-intl';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { darken } from 'polished';
@@ -16,13 +17,19 @@ const AddButton = styled.b({
 
 const NoVideo = ({ addVideo }) => (
   <StyledNoVideo>
-    YouTube の URL をクリップボードにコピーして、
+    <FormattedMessage id="components.no-video.l1" />
     <div style={{ fontSize: '2rem' }}>
-      <AddButton onClick={addVideo}>
-        <Icon icon="plus" />
-        ボタン
-      </AddButton>
-      で開始
+      <FormattedMessage
+        id="components.no-video.l2"
+        values={{
+          button: (
+            <AddButton onClick={addVideo}>
+              <Icon icon="plus" />
+              <FormattedMessage id="components.no-video.button" />
+            </AddButton>
+          )
+        }}
+      />
     </div>
   </StyledNoVideo>
 );

@@ -1,4 +1,5 @@
 import React from 'react';
+import { useIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import Alert from './alert';
@@ -44,6 +45,7 @@ const AvatarBadge = styled(Icon)(({ color }) => ({
 }));
 
 const Comment = ({ comment }) => {
+  const { formatMessage } = useIntl();
   const { conf } = Container.useContainer();
 
   if (comment.isSystem) {
@@ -67,15 +69,28 @@ const Comment = ({ comment }) => {
               <AvatarBadge
                 icon="crown"
                 color="#ffc107"
-                title="チャンネルオーナー"
+                title={formatMessage({ id: 'components.comment.owner' })}
               />
             )}
             {author.isChatModerator && (
-              <AvatarBadge icon="wrench" color="#036eec" title="モデレーター" />
+              <AvatarBadge
+                icon="wrench"
+                color="#036eec"
+                title={formatMessage({ id: 'components.comment.mod' })}
+              />
             )}
-            {author.isVerified && <AvatarBadge icon="check" title="確認済み" />}
+            {author.isVerified && (
+              <AvatarBadge
+                icon="check"
+                title={formatMessage({ id: 'components.comment.verified' })}
+              />
+            )}
             {author.isChatSponsor && (
-              <AvatarBadge icon="star" color="#28a745" title="メンバーシップ" />
+              <AvatarBadge
+                icon="star"
+                color="#28a745"
+                title={formatMessage({ id: 'components.comment.sponsor' })}
+              />
             )}
           </UserLink>
         )}

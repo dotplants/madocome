@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { FormattedMessage } from 'react-intl';
 
 import Container from '../../container';
 import { getConfig } from '../../utils/config';
@@ -59,10 +60,16 @@ const Sidebar = () => {
             addComment({
               isSystem: true,
               body: (
-                <>
-                  トークンの有効期限が切れているようです。
-                  <a href="/api/auth-login">ログイン</a>し直してください。
-                </>
+                <FormattedMessage
+                  id="components.side.please_relogin"
+                  values={{
+                    login: (
+                      <a href="/api/auth-login">
+                        <FormattedMessage id="components.side.login" />
+                      </a>
+                    )
+                  }}
+                />
               )
             });
           }
@@ -136,16 +143,22 @@ const Sidebar = () => {
           addComment({
             isSystem: true,
             video,
-            body: `システムエラー: ${JSON.stringify(error)}`
+            body: `ERR: ${JSON.stringify(error)}`
           });
           if (error.errors[0].reason === 'authError') {
             addComment({
               isSystem: true,
               body: (
-                <>
-                  トークンの有効期限が切れているようです。
-                  <a href="/api/auth-login">ログイン</a>し直してください。
-                </>
+                <FormattedMessage
+                  id="components.side.please_relogin"
+                  values={{
+                    login: (
+                      <a href="/api/auth-login">
+                        <FormattedMessage id="components.side.login" />
+                      </a>
+                    )
+                  }}
+                />
               )
             });
           }
@@ -155,7 +168,7 @@ const Sidebar = () => {
           return addComment({
             video,
             isSystem: true,
-            body: `システムエラー: データを取得できませんでした。`
+            body: <FormattedMessage id="components.side.error" />
           });
         }
 
@@ -176,14 +189,15 @@ const Sidebar = () => {
         return addComment({
           isSystem: true,
           video,
-          body: `コメントの受信を開始しました✨`
+          body: <FormattedMessage id="components.side.start_stream" />
         });
       })
       .catch(e => {
         console.error(e);
         return addComment({
           isSystem: true,
-          body: `システムエラー: "${video.id}" のデータ取得中にエラーが発生しました。トークンが使用できないか、間違った動画IDの可能性があります。`
+          video,
+          body: <FormattedMessage id="components.side.error" />
         });
       });
   };
@@ -203,7 +217,7 @@ const Sidebar = () => {
     return addComment({
       isSystem: true,
       video,
-      body: `コメントの受信を終了しました🌙`
+      body: <FormattedMessage id="components.side.stop_stream" />
     });
   };
 
@@ -223,12 +237,13 @@ const Sidebar = () => {
               key={video.id}
             >
               <Icon icon={!video.hideComment ? 'check-square' : 'square'} />{' '}
-              <ColorBlock bg={video.color} /> コメントを受信
+              <ColorBlock bg={video.color} />{' '}
+              <FormattedMessage id="components.side.menu.recive" />
             </MenuItem>
           ))}
           {!videos[0] && (
             <MenuItem>
-              (視聴開始するとここでコメントのフィルターができます)
+              <FormattedMessage id="components.side.menu.note" />
             </MenuItem>
           )}
           <MenuHr />
@@ -236,17 +251,18 @@ const Sidebar = () => {
             onClick={() => setConf('hide_username', !conf.hide_username)}
           >
             <Icon icon={conf.hide_username ? 'check-square' : 'square'} />{' '}
-            ユーザ名を表示しない
+            <FormattedMessage id="components.side.menu.hide_username" />
           </MenuItem>
           <MenuItem
             onClick={() => setConf('hide_longtext', !conf.hide_longtext)}
           >
             <Icon icon={conf.hide_longtext ? 'check-square' : 'square'} />{' '}
-            長文コメントを畳む
+            <FormattedMessage id="components.side.menu.hide_longtext" />
           </MenuItem>
           <MenuHr />
           <MenuItem onClick={toggleMenuOpened}>
-            <Icon icon="door-closed" /> 完了
+            <Icon icon="door-closed" />{' '}
+            <FormattedMessage id="components.side.menu.done" />
           </MenuItem>
         </StyledMenu>
       )}
@@ -256,14 +272,24 @@ const Sidebar = () => {
           <Icon icon="caret-down" />
         </Right>
 
-        <b>統合タイムライン</b>
+        <b>
+          <FormattedMessage id="title" />
+        </b>
       </Selector>
 
       <Comments>
         {!token && (
           <Alert>
-            コメントを表示・投稿するには<a href="/api/auth-login">ログイン</a>
-            してください。
+            <FormattedMessage
+              id="components.side.please_login"
+              values={{
+                login: (
+                  <a href="/api/auth-login">
+                    <FormattedMessage id="components.side.login" />
+                  </a>
+                )
+              }}
+            />
           </Alert>
         )}
         {token &&

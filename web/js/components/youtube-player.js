@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { FormattedMessage, useIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 import YouTube from 'react-youtube';
 import styled from 'styled-components';
@@ -18,6 +19,7 @@ const MenuButton = styled.div(({ bg }) => ({
 }));
 
 const Player = ({ video }) => {
+  const { formatMessage } = useIntl();
   const { videos, setVideos } = Container.useContainer();
   const [menuOpened, setMenuOpened] = useState(false);
   const index = videos.findIndex(v => v && v.id === video.id);
@@ -33,7 +35,7 @@ const Player = ({ video }) => {
 
   const updateVideo = (id, command, value) => {
     if (index === undefined) {
-      return alert('この動画IDは存在しません。');
+      return alert(formatMessage({ id: 'components.player.not_found' }));
     }
 
     switch (command) {
@@ -92,28 +94,34 @@ const Player = ({ video }) => {
       {menuOpened && (
         <Menu>
           <MenuItem onClick={() => updateVideo(video.id, 'remove')}>
-            <Icon icon="power-off" /> 削除
+            <Icon icon="power-off" />{' '}
+            <FormattedMessage id="components.player.delete" />
           </MenuItem>
           <MenuHr />
           {videos.length !== index + 1 && (
             <MenuItem onClick={() => updateVideo(video.id, 'move', 'right')}>
-              <Icon icon="arrow-right" /> 次に移動
+              <Icon icon="arrow-right" />{' '}
+              <FormattedMessage id="components.player.move-to-right" />
             </MenuItem>
           )}
           {index !== 0 && (
             <MenuItem onClick={() => updateVideo(video.id, 'move', 'left')}>
-              <Icon icon="arrow-left" /> 前に移動
+              <Icon icon="arrow-left" />{' '}
+              <FormattedMessage id="components.player.move-to-left" />
             </MenuItem>
           )}
           <MenuHr />
           <MenuItem onClick={() => updateVideo(video.id, 'resize', 'up')}>
-            <Icon icon="expand-alt" /> 少し大きく
+            <Icon icon="expand-alt" />{' '}
+            <FormattedMessage id="components.player.larger" />
           </MenuItem>
           <MenuItem onClick={() => updateVideo(video.id, 'resize', 'down')}>
-            <Icon icon="compress-alt" /> 少し小さく
+            <Icon icon="compress-alt" />{' '}
+            <FormattedMessage id="components.player.smaller" />
           </MenuItem>
           <MenuItem onClick={() => updateVideo(video.id, 'reset')}>
-            <Icon icon="arrows-alt-h" /> リセット
+            <Icon icon="arrows-alt-h" />{' '}
+            <FormattedMessage id="components.player.reset" />
           </MenuItem>
         </Menu>
       )}

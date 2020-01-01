@@ -1,6 +1,6 @@
 import { getConfig, resetConfig } from './config';
 
-const autoRefreshToken = () => {
+const autoRefreshToken = (isFirst = false) => {
   const token = getConfig('refresh_token', 'live_token');
   const expiresAt = getConfig('expires_at', 'live_token');
   if (!token || !expiresAt) return;
@@ -19,6 +19,11 @@ const autoRefreshToken = () => {
         resetConfig(json, 'live_token');
         autoRefreshToken();
         console.log('Token refreshed!!');
+
+        // 初回読み込み、ページ読み込み時点で切れていれば再発行
+        if (isFirst && timeout < 0) {
+          location.reload();
+        }
       });
   }, timeout);
 };

@@ -25,10 +25,12 @@ const Container = () => {
   }, [comments]);
 
   const addComment = data => setComments(prev => insertTop(prev, data));
-  const setVideos = func => {
-    SetVideos(func);
-    setConfig('videos', videos);
-  };
+  const setVideos = func =>
+    SetVideos(prev => {
+      const next = func(prev);
+      setConfig('videos', next);
+      return next;
+    });
   const setConf = (key, value) => {
     conf[key] = value;
     SetConf(JSON.stringify(conf));

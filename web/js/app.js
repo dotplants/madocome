@@ -7,6 +7,7 @@ import { lighten, darken } from 'polished';
 import Routes from './routes';
 import autoRefreshToken from './utils/refresh-token';
 import Container from './container';
+import I18nProvider from './utils/locale/provider';
 
 const bgBase = '#000';
 const textBase = '#fff';
@@ -45,16 +46,18 @@ const GlobalStyle = createGlobalStyle({
   }
 });
 
-autoRefreshToken();
+autoRefreshToken(true);
 const App = () => (
   <ThemeProvider theme={theme}>
     <Normalize />
     <GlobalStyle />
-    <Container.Provider>
-      <BrowserRouter>
-        <Routes />
-      </BrowserRouter>
-    </Container.Provider>
+    <I18nProvider locale="ja">
+      <Container.Provider>
+        <BrowserRouter>
+          <Routes />
+        </BrowserRouter>
+      </Container.Provider>
+    </I18nProvider>
   </ThemeProvider>
 );
 
