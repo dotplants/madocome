@@ -3,6 +3,7 @@ import { useIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { lighten } from 'polished';
+import { Link } from 'react-router-dom';
 
 import Container from '../../container';
 import ExternalLink from '../external-link';
@@ -69,10 +70,7 @@ const Footer = ({ addVideo }) => {
           <Right>
             <b>
               <small>
-                <ExternalLink href="https://github.com/dotplants/madocome">
-                  madocome
-                </ExternalLink>{' '}
-                built by{' '}
+                <Link to="/about">madocome</Link> built by{' '}
                 <ExternalLink href="https://nzws.me">@nzws_me</ExternalLink>{' '}
                 with 💖
               </small>
