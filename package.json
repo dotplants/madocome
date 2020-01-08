@@ -4,6 +4,9 @@
   "author": "nzws <git@nzws.me>",
   "license": "MIT",
   "private": true,
+  "engines": {
+    "node": "12.x"
+  },
   "scripts": {
     "lint:js": "eslint --ignore-path .gitignore \"**/*.js\"",
     "lint:styled": "stylelint --ignore-path .gitignore \"**/*.js\"",
