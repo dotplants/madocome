@@ -5,7 +5,7 @@
   "license": "MIT",
   "private": true,
   "engines": {
-    "node": "12.x"
+    "node": "12.x || 13.x"
   },
   "scripts": {
     "lint:js": "eslint --ignore-path .gitignore \"**/*.js\"",
