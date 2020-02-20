@@ -7,6 +7,7 @@ import { lighten } from 'polished';
 import Icon from '../icon';
 import { MenuItem, Menu } from '../menu';
 import { getConfig } from '../../utils/config';
+import api from '../../utils/api';
 
 const StyledPostWrapper = styled.div(({ theme }) => ({
   background: lighten(0.25, theme.bgBase),
@@ -93,26 +94,19 @@ const Post = ({ videos }) => {
     }
 
     setSubmitting(true);
-    fetch(
-      `https://www.googleapis.com/youtube/v3/liveChat/messages?part=snippet`,
-      {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          snippet: {
-            liveChatId: video.liveChatId,
-            type: 'textMessageEvent',
-            textMessageDetails: {
-              messageText: value
-            }
+    api({
+      method: 'POST',
+      path: 'youtube/v3/liveChat/messages?part=snippet',
+      data: {
+        snippet: {
+          liveChatId: video.liveChatId,
+          type: 'textMessageEvent',
+          textMessageDetails: {
+            messageText: value
           }
-        })
+        }
       }
-    )
-      .then(response => response.json())
+    })
       .then(data => {
         setSubmitting(false);
         if (data.error) {

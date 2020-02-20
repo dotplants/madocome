@@ -70,14 +70,12 @@ const Comment = ({ comment, conf }) => {
   const author = comment.authorDetails;
 
   if (comment.snippet.superChatDetails) {
-    const funding = comment.snippet.superChatDetails || comment.snippet.superStickerDetails;
+    const funding =
+      comment.snippet.superChatDetails || comment.snippet.superStickerDetails;
     const isChat = !!comment.snippet.superChatDetails;
 
     return (
-      <StyledComment
-        color={comment.video.color}
-        tier={funding.tier}
-      >
+      <StyledComment color={comment.video.color} tier={funding.tier}>
         {author && (
           <UserLink href={author.channelUrl}>
             <Avatar src={author.profileImageUrl} />
