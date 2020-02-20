@@ -102,7 +102,7 @@ const Comment = ({ comment, conf }) => {
         !author.isVerified &&
         !author.isChatSponsor)
     ) {
-      return;
+      return <></>;
     }
 
     return (
