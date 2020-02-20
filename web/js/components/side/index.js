@@ -19,7 +19,7 @@ import {
 } from './styles';
 
 const commentTokens = {};
-const TIMEOUT = 15 * 1000;
+const TIMEOUT = 10 * 1000;
 
 const insertTop = (element, newValue) => {
   const newElem = element.slice();
@@ -57,14 +57,6 @@ const Sidebar = () => {
   const [commentGetter, setCommentGetter] = useState({});
   const token = getConfig('access_token', 'live_token');
 
-  useEffect(() => {
-    if (comments.length > 300) {
-      setComments(prev => {
-        prev.length = 300;
-        return prev;
-      });
-    }
-  }, [comments]);
   const addComment = data => setComments(prev => insertTop(prev, data));
 
   const getVideoIndex = videoId =>
@@ -320,10 +312,11 @@ const Sidebar = () => {
             />
           </Alert>
         )}
-        {token &&
+        {token && (
           comments.map((comment, key) => (
             <Comment comment={comment} key={comment.id || key} conf={conf} />
-          ))}
+          )).filter((v, i) => i < 150)
+        )}
       </Comments>
 
       <Post videos={videos} />

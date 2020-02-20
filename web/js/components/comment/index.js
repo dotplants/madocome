@@ -70,27 +70,26 @@ const Comment = ({ comment, conf }) => {
   const author = comment.authorDetails;
 
   if (comment.snippet.superChatDetails) {
+    const funding = comment.snippet.superChatDetails || comment.snippet.superStickerDetails;
+    const isChat = !!comment.snippet.superChatDetails;
+
     return (
       <StyledComment
         color={comment.video.color}
-        tier={comment.snippet.superChatDetails.tier}
+        tier={funding.tier}
       >
         {author && (
           <UserLink href={author.channelUrl}>
             <Avatar src={author.profileImageUrl} />
             <User author={author} conf={conf} forceName />
-            <b>{comment.snippet.superChatDetails.amountDisplayString}</b>
+            <b>{funding.amountDisplayString}</b>
           </UserLink>
         )}
         <SuperChatComment>
-          {comment.snippet.superChatDetails.userComment}
+          {isChat ? funding.userComment : '(Super Sticker)'}
         </SuperChatComment>
       </StyledComment>
     );
-  }
-
-  if (comment.snippet.superStickerDetails) {
-    console.log(comment.snippet.superStickerDetails);
   }
 
   if (comment.snippet.textMessageDetails) {
