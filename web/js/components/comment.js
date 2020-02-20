@@ -58,6 +58,19 @@ const Comment = ({ comment }) => {
   }
 
   const author = comment.authorDetails;
+  if (
+    (author.isChatOwner && conf.hide_owner) ||
+    (author.isChatModerator && conf.hide_mod) ||
+    (author.isVerified && conf.hide_verified) ||
+    (author.isChatSponsor && conf.hide_sponsor) ||
+    (conf.hide_anonymous &&
+      !author.isChatOwner &&
+      !author.isChatModerator &&
+      !author.isVerified &&
+      !author.isChatSponsor)
+  ) {
+    return;
+  }
   if (comment.snippet.textMessageDetails) {
     return (
       <StyledComment color={comment.video.color} hideLong={conf.hide_longtext}>

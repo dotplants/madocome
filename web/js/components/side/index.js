@@ -19,21 +19,53 @@ import {
 } from './styles';
 
 const commentTokens = {};
-const TIMEOUT = 10000;
+const TIMEOUT = 15 * 1000;
+
+const insertTop = (element, newValue) => {
+  const newElem = element.slice();
+  newElem.unshift(newValue);
+  return newElem;
+};
+
+const relogin = {
+  isSystem: true,
+  body: (
+    <FormattedMessage
+      id="components.side.please_relogin"
+      values={{
+        login: (
+          <a href="/api/auth-login">
+            <FormattedMessage id="components.side.login" />
+          </a>
+        )
+      }}
+    />
+  )
+};
 
 const Sidebar = () => {
   const {
-    comments,
     videos,
     setVideo,
-    addComment,
     conf,
-    setConf
+    setConf,
+    forceUpdate
   } = Container.useContainer();
+  const [comments, setComments] = useState([]);
   const [menuOpened, setMenuOpened] = useState(false);
   const [prevVideos, setPrevVideos] = useState([]);
   const [commentGetter, setCommentGetter] = useState({});
   const token = getConfig('access_token', 'live_token');
+
+  useEffect(() => {
+    if (comments.length > 300) {
+      setComments(prev => {
+        prev.length = 300;
+        return prev;
+      });
+    }
+  }, [comments]);
+  const addComment = data => setComments(prev => insertTop(prev, data));
 
   const getVideoIndex = videoId =>
     videos.findIndex(video => video.id === videoId);
@@ -57,21 +89,7 @@ const Sidebar = () => {
         if (error) {
           console.error(error);
           if (error.errors[0].reason === 'authError') {
-            addComment({
-              isSystem: true,
-              body: (
-                <FormattedMessage
-                  id="components.side.please_relogin"
-                  values={{
-                    login: (
-                      <a href="/api/auth-login">
-                        <FormattedMessage id="components.side.login" />
-                      </a>
-                    )
-                  }}
-                />
-              )
-            });
+            addComment(relogin);
           }
           return;
         }
@@ -146,21 +164,7 @@ const Sidebar = () => {
             body: `ERR: ${JSON.stringify(error)}`
           });
           if (error.errors[0].reason === 'authError') {
-            addComment({
-              isSystem: true,
-              body: (
-                <FormattedMessage
-                  id="components.side.please_relogin"
-                  values={{
-                    login: (
-                      <a href="/api/auth-login">
-                        <FormattedMessage id="components.side.login" />
-                      </a>
-                    )
-                  }}
-                />
-              )
-            });
+            addComment(relogin);
           }
           return;
         }
@@ -177,6 +181,7 @@ const Sidebar = () => {
           liveChatId,
           hideComment: false
         });
+        forceUpdate();
         setCommentGetter(prev => ({
           ...prev,
           [video.id]: setInterval(
@@ -213,6 +218,7 @@ const Sidebar = () => {
       setVideo(video.id, {
         hideComment: true
       });
+      forceUpdate();
     }
     return addComment({
       isSystem: true,
@@ -259,6 +265,26 @@ const Sidebar = () => {
             <Icon icon={conf.hide_longtext ? 'check-square' : 'square'} />{' '}
             <FormattedMessage id="components.side.menu.hide_longtext" />
           </MenuItem>
+          <MenuHr />
+          <MenuItem>
+            <b>
+              <FormattedMessage id="components.side.menu.show_user.title" />
+            </b>
+            <br />
+            <small>
+              <FormattedMessage id="components.side.menu.show_user.note" />
+            </small>
+          </MenuItem>
+
+          {['owner', 'mod', 'verified', 'sponsor', 'anonymous'].map(id => (
+            <MenuItem
+              key={id}
+              onClick={() => setConf(`hide_${id}`, !conf[`hide_${id}`])}
+            >
+              <Icon icon={conf[`hide_${id}`] ? 'square' : 'check-square'} />{' '}
+              <FormattedMessage id={`components.side.menu.show_user.${id}`} />
+            </MenuItem>
+          ))}
           <MenuHr />
           <MenuItem onClick={toggleMenuOpened}>
             <Icon icon="door-closed" />{' '}

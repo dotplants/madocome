@@ -30,6 +30,15 @@
         "recive": "コメントを受信",
         "hide_username": "ユーザ名を表示しない",
         "hide_longtext": "長文コメントを畳む",
+        "show_user": {
+          "title": "次のユーザーからのコメントを表示:",
+          "note": "* コメ先のチャンネルから見える権限です",
+          "owner": "チャンネルオーナー",
+          "mod": "モデレーター",
+          "verified": "認証済みユーザー",
+          "sponsor": "スポンサー",
+          "anonymous": "それ以外"
+        },
         "done": "完了"
       },
       "post": {

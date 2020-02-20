@@ -5,21 +5,7 @@
   "scope": "dotplants",
   "regions": ["hnd1"],
   "public": false,
-  "builds": [
-    {
-      "src": "package.json",
-      "use": "@now/static-build"
-    },
-    { "src": "lambda/controllers/*.js", "use": "@now/node" }
-  ],
   "github": { "silent": true },
-  "rewrites": [
-    { "source": "/api/(.*)", "destination": "/lambda/controllers/$1.js" },
-    {
-      "source": "/(login|key_login|shared|about)",
-      "destination": "/index.html"
-    }
-  ],
   "env": {
     "CLIENT_ID": "@viewer_yt_client_id",
     "CLIENT_SECRET": "@viewer_yt_client_secret"

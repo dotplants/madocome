@@ -1,4 +1,7 @@
-import queryBuilder from '../utils/query-builder';
+const queryBuilder = opts =>
+  Object.keys(opts)
+    .map(key => `${key}=${encodeURIComponent(opts[key])}`)
+    .join('&');
 
 module.exports = (req, res) => {
   const protocol = req.headers['x-forwarded-proto'];
