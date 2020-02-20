@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, memo } from 'react';
 import { useIntl, FormattedMessage } from 'react-intl';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
@@ -184,4 +184,4 @@ Post.propTypes = {
   videos: PropTypes.array.isRequired
 };
 
-export default Post;
+export default memo(Post);

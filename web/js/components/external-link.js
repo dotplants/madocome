@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import PropTypes from 'prop-types';
 
 const ExternalLink = ({ href, children, ...prop }) => (
@@ -13,4 +13,4 @@ ExternalLink.propTypes = {
   children: PropTypes.node.isRequired
 };
 
-export default ExternalLink;
+export default memo(ExternalLink);

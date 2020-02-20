@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import styled from 'styled-components';
@@ -60,4 +60,4 @@ User.propTypes = {
   forceName: PropTypes.bool
 };
 
-export default User;
+export default memo(User);

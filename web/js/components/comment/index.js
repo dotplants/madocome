@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { darken } from 'polished';
@@ -77,11 +77,13 @@ const Comment = ({ comment, conf }) => {
     return (
       <StyledComment color={comment.video.color} tier={funding.tier}>
         {author && (
-          <UserLink href={author.channelUrl}>
-            <Avatar src={author.profileImageUrl} />
-            <User author={author} conf={conf} forceName />
+          <>
+            <UserLink href={author.channelUrl}>
+              <Avatar src={author.profileImageUrl} />
+              <User author={author} conf={conf} forceName />
+            </UserLink>
             <b>{funding.amountDisplayString}</b>
-          </UserLink>
+          </>
         )}
         <SuperChatComment>
           {isChat ? funding.userComment : '(Super Sticker)'}
@@ -124,4 +126,4 @@ Comment.propTypes = {
   conf: PropTypes.object.isRequired
 };
 
-export default Comment;
+export default memo(Comment);

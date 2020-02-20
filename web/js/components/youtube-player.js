@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, memo } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 import YouTube from 'react-youtube';
@@ -134,4 +134,4 @@ Player.propTypes = {
   video: PropTypes.object.isRequired
 };
 
-export default Player;
+export default memo(Player);

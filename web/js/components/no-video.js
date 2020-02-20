@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { FormattedMessage } from 'react-intl';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
@@ -38,4 +38,4 @@ NoVideo.propTypes = {
   addVideo: PropTypes.func.isRequired
 };
 
-export default NoVideo;
+export default memo(NoVideo);

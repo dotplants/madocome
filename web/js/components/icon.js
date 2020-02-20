@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import classNames from '../utils/classnames';
@@ -23,4 +23,4 @@ Icon.propTypes = {
   onClick: PropTypes.func
 };
 
-export default Icon;
+export default memo(Icon);
