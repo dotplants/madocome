@@ -322,7 +322,7 @@ const Sidebar = () => {
         )}
         {token &&
           comments.map((comment, key) => (
-            <Comment comment={comment} key={comment.id || key} />
+            <Comment comment={comment} key={comment.id || key} conf={conf} />
           ))}
       </Comments>
 

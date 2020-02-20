@@ -17,7 +17,7 @@
     "format": "npm-run-all format:* -s",
     "build:client": "parcel build web/index.html -d public --no-source-maps",
     "build": "npm-run-all build:* -s",
-    "now-dev": "parcel web/index.html --port $PORT"
+    "now-dev": "parcel web/index.html -d public --port $PORT"
   },
   "devDependencies": {
     "@babel/core": "^7.8.4",
