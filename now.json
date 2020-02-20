@@ -9,5 +9,11 @@
   "env": {
     "CLIENT_ID": "@viewer_yt_client_id",
     "CLIENT_SECRET": "@viewer_yt_client_secret"
-  }
+  },
+  "rewrites": [
+    {
+      "source": "/(login|key_login|shared|about)",
+      "destination": "/index.html"
+    }
+  ]
 }

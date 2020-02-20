@@ -249,7 +249,9 @@ const Sidebar = () => {
           ))}
           {!videos[0] && (
             <MenuItem>
-              <FormattedMessage id="components.side.menu.note" />
+              <small>
+                <FormattedMessage id="components.side.menu.note" />
+              </small>
             </MenuItem>
           )}
           <MenuHr />

@@ -42,7 +42,21 @@ const GlobalStyle = createGlobalStyle({
     height: '100%'
   },
   '*, *:after, *:before': {
-    boxSizing: 'border-box'
+    boxSizing: 'border-box',
+    transition: '120ms ease',
+    // for firefox
+    scrollbarColor: ({ theme: { background } }) =>
+      `${lighten(0.2, background)} transparent`,
+    scrollbarWidth: 'thin'
+  },
+  '::-webkit-scrollbar': {
+    width: '10px',
+    height: '10px',
+    background: ({ theme: { background } }) => background,
+    '&-thumb': {
+      background: ({ theme: { background } }) => lighten(0.2, background),
+      border: 'none'
+    }
   }
 });
 
