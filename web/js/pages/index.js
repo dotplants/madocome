@@ -12,6 +12,8 @@ import { youtubeRegExp, setRatio } from '../utils/env';
 import { getStringData } from '../utils/config';
 import NewUser from '../components/new-user';
 
+const length = 6;
+
 const Index = () => {
   const { formatMessage } = useIntl();
   const { videos, setVideos, conf } = Container.useContainer();
@@ -27,8 +29,10 @@ const Index = () => {
       if (videos.find(video => video.id === id)) {
         return alert(formatMessage({ id: 'pages.index.error_already' }));
       }
-      if (videos.length > 12) {
-        return alert(formatMessage({ id: 'pages.index.error_length' }));
+      if (videos.length >= length) {
+        return alert(
+          formatMessage({ id: 'pages.index.error_length' }, { length })
+        );
       }
 
       const newVideo = {

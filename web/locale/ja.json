@@ -90,7 +90,7 @@
     "index": {
       "error_url": "解析できませんでした: youtubeのURLでない可能性があります。",
       "error_already": "このURLは追加済みです。",
-      "error_length": "12個まで追加できます。",
+      "error_length": "{length}個まで追加できます。",
       "paste_url": "YouTube URLを貼り付けてください: (クリップボード読み取りに対応していないブラウザ)"
     },
     "shared": {
