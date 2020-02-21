@@ -26,15 +26,6 @@ export const Right = styled.div({
   float: 'right'
 });
 
-export const Comments = styled.div({
-  gridRow: 2,
-  gridColumn: 1,
-  overflowY: 'scroll',
-  overflowX: 'hidden',
-  display: 'flex',
-  flexDirection: 'column-reverse'
-});
-
 export const StyledMenu = styled(Menu)({
   bottom: 'initial',
   top: '15px',
@@ -47,4 +38,25 @@ export const ColorBlock = styled.span(({ bg }) => ({
   width: '1rem',
   height: '1rem',
   background: bg
+}));
+
+export const PostWrapper = styled.div({
+  position: 'relative'
+});
+
+export const ScrollToBottom = styled.button(({ isScrolling, theme }) => ({
+  zIndex: 1,
+  position: 'absolute',
+  border: 'none',
+  fontSize: '1.5rem',
+  color: theme.textBase,
+  background: theme.linkBase,
+  boxShadow: theme.shadow,
+  padding: 10,
+  borderRadius: '100%',
+  cursor: 'pointer',
+  opacity: isScrolling ? 1 : 0,
+  top: isScrolling ? -55 : 0,
+  left: '50%',
+  transform: 'translateX(-50%)'
 }));

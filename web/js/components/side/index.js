@@ -1,16 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { FormattedMessage } from 'react-intl';
 
 import Container from '../../container';
-import { getConfig } from '../../utils/config';
 import Icon from '../icon';
-import Alert from '../alert';
-import Comment from '../comment';
 import Post from './post';
-import { Side, Selector, Right, Comments } from './styles';
+import { Side, Selector, Right, PostWrapper, ScrollToBottom } from './styles';
 import Config from './config';
 import api from '../../utils/api';
-import ExternalLink from '../external-link';
+import Comments from './comments';
 
 const commentTokens = {};
 const isRunningComment = {};
@@ -57,12 +54,9 @@ const Sidebar = () => {
   const { videos, conf, setVideo, forceUpdate } = Container.useContainer();
   const [comments, setComments] = useState([]);
   const [menuOpened, setMenuOpened] = useState(false);
-  const token = getConfig('access_token', 'live_token');
-
   const [prevVideos, setPrevVideos] = useState([]);
 
   const addComment = data => setComments(prev => insertTop(prev, data));
-
   const getVideoIndex = videoId =>
     videos.findIndex(video => video.id === videoId);
 
@@ -209,6 +203,19 @@ const Sidebar = () => {
 
   const toggleMenuOpened = () => setMenuOpened(prev => !prev);
 
+  const [isScrolling, setIsScrolling] = useState(false);
+  const commentsRef = useRef(null);
+  const scrollToBottom = () =>
+    (commentsRef.current.scrollTop = commentsRef.current.scrollHeight + 999);
+  const onScroll = e => {
+    const elem = e.target;
+    const isScrollingNow =
+      elem.scrollHeight - elem.clientHeight - elem.scrollTop > 50;
+    if (isScrolling !== isScrollingNow) {
+      setIsScrolling(isScrollingNow);
+    }
+  };
+
   return (
     <Side isHide={conf.hide_side}>
       {menuOpened && (
@@ -230,53 +237,14 @@ const Sidebar = () => {
         </b>
       </Selector>
 
-      <Comments>
-        {!token && (
-          <Alert>
-            <FormattedMessage
-              id="components.side.please_login"
-              values={{
-                login: (
-                  <a href="/api/auth-login">
-                    <FormattedMessage id="components.side.login" />
-                  </a>
-                )
-              }}
-            />
-            <br />
-            <small>
-              <FormattedMessage
-                id="components.side.login_note.title"
-                values={{
-                  terms: (
-                    <ExternalLink href="https://www.youtube.com/t/terms">
-                      <FormattedMessage id="components.side.login_note.terms" />
-                    </ExternalLink>
-                  ),
-                  privacy: (
-                    <ExternalLink href="https://policies.google.com/privacy">
-                      <FormattedMessage id="components.side.login_note.privacy" />
-                    </ExternalLink>
-                  ),
-                  document: (
-                    <ExternalLink href="https://github.com/dotplants/madocome/blob/master/docs/ja/api-permission.md">
-                      <FormattedMessage id="components.side.login_note.document" />
-                    </ExternalLink>
-                  )
-                }}
-              />
-            </small>
-          </Alert>
-        )}
-        {token &&
-          comments
-            .map((comment, key) => (
-              <Comment comment={comment} key={comment.id || key} conf={conf} />
-            ))
-            .filter((v, i) => i < 150)}
-      </Comments>
+      <Comments comments={comments} onScroll={onScroll} divRef={commentsRef} />
 
-      <Post videos={videos} />
+      <PostWrapper>
+        <Post videos={videos} />
+        <ScrollToBottom isScrolling={isScrolling} onClick={scrollToBottom}>
+          <Icon icon="arrow-down" />
+        </ScrollToBottom>
+      </PostWrapper>
     </Side>
   );
 };
