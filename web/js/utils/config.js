@@ -1,4 +1,4 @@
-const KEY = 'live_viewer_config';
+export const KEY = 'live_viewer_config';
 
 const defaultConfig = {
   version: 1

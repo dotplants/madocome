@@ -8,6 +8,7 @@ import Routes from './routes';
 import autoRefreshToken from './utils/refresh-token';
 import Container from './container';
 import I18nProvider from './utils/locale/provider';
+import ErrorBoundary from './error';
 
 const bgBase = '#000';
 const textBase = '#fff';
@@ -62,17 +63,19 @@ const GlobalStyle = createGlobalStyle({
 
 autoRefreshToken(true);
 const App = () => (
-  <ThemeProvider theme={theme}>
-    <Normalize />
-    <GlobalStyle />
-    <I18nProvider locale="ja">
-      <Container.Provider>
-        <BrowserRouter>
-          <Routes />
-        </BrowserRouter>
-      </Container.Provider>
-    </I18nProvider>
-  </ThemeProvider>
+  <ErrorBoundary>
+    <ThemeProvider theme={theme}>
+      <Normalize />
+      <GlobalStyle />
+      <I18nProvider locale="ja">
+        <Container.Provider>
+          <BrowserRouter>
+            <Routes />
+          </BrowserRouter>
+        </Container.Provider>
+      </I18nProvider>
+    </ThemeProvider>
+  </ErrorBoundary>
 );
 
 export default App;

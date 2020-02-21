@@ -40,12 +40,17 @@ const reasonText = reason => {
     case 'quotaExceeded':
       return {
         isSystem: true,
-        body: <FormattedMessage id="components.side.error_limit" />
+        body: <FormattedMessage id="errors.limit" />
+      };
+    case 'liveChatNotFound':
+      return {
+        isSystem: true,
+        body: <FormattedMessage id="errors.not_found" />
       };
     default:
       return {
         isSystem: true,
-        body: <FormattedMessage id="components.side.error" />
+        body: <FormattedMessage id="errors.default" />
       };
   }
 };
@@ -136,7 +141,7 @@ const Sidebar = () => {
           return addComment({
             video,
             isSystem: true,
-            body: <FormattedMessage id="components.side.error" />
+            body: <FormattedMessage id="errors.default" />
           });
         }
 
@@ -161,7 +166,7 @@ const Sidebar = () => {
         return addComment({
           isSystem: true,
           video,
-          body: <FormattedMessage id="components.side.error" />
+          body: <FormattedMessage id="errors.default" />
         });
       });
   };

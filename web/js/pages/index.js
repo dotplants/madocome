@@ -38,20 +38,20 @@ const Index = () => {
       if (!id) {
         return alert(formatMessage({ id: 'pages.index.error_url' }));
       }
-      if (videos.find(video => video.id === id)) {
-        return alert(formatMessage({ id: 'pages.index.error_already' }));
-      }
-      if (videos.length >= length) {
-        return alert(
-          formatMessage({ id: 'pages.index.error_length' }, { length })
-        );
-      }
-
-      const newVideo = {
-        id,
-        color: selectOneColor()
-      };
       setVideos(prev => {
+        if (prev.find(video => video.id === id)) {
+          alert(formatMessage({ id: 'pages.index.error_already' }));
+          return prev;
+        }
+        if (prev.length >= length) {
+          alert(formatMessage({ id: 'pages.index.error_length' }, { length }));
+          return prev;
+        }
+
+        const newVideo = {
+          id,
+          color: selectOneColor()
+        };
         prev.push(newVideo);
         prev = prev.map(video => {
           if (!video.pinned) {
