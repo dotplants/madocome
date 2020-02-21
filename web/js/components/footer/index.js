@@ -20,7 +20,8 @@ const base = styled.div(({ theme }) => ({
 const StyledFooter = styled(base)({
   padding: '15px 30px',
   right: 0,
-  width: '100%'
+  width: '100%',
+  zIndex: 9
 });
 
 const SmallButton = styled(base)(({ theme }) => ({

@@ -41,11 +41,12 @@ export const ColorBlock = styled.span(({ bg }) => ({
 }));
 
 export const PostWrapper = styled.div({
-  position: 'relative'
+  position: 'relative',
+  zIndex: 2
 });
 
 export const ScrollToBottom = styled.button(({ isScrolling, theme }) => ({
-  zIndex: 1,
+  zIndex: -1,
   position: 'absolute',
   border: 'none',
   fontSize: '1.5rem',

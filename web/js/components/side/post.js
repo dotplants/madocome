@@ -15,7 +15,7 @@ const StyledPostWrapper = styled.div(({ theme }) => ({
   gridRow: 3,
   gridColumn: 1,
   padding: '15px',
-  zIndex: 9
+  zIndex: 2
 }));
 
 const Input = styled.input(({ theme }) => ({
