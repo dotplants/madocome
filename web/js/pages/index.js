@@ -18,7 +18,7 @@ const Index = () => {
   const addVideo = () => {
     const resolve = data => {
       const obj = data.match(youtubeRegExp) || [];
-      const id = obj[3];
+      const id = obj[1];
       if (!id) {
         return alert(formatMessage({ id: 'pages.index.error_url' }));
       }
