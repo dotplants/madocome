@@ -26,6 +26,9 @@ const About = () => (
     <Link to="/">トップに戻る</Link>
     <h1>窓米 - madocome -</h1>
     <b>コメントをまとめて見ることができる</b>YouTube Liveの窓ツールです。
+    <ExternalLink href="https://github.com/dotplants/madocome/blob/master/docs/">
+      使い方などはこちら
+    </ExternalLink>
     <ImageWrapper>
       <Image src="https://i.imgur.com/KKJiL0T.png" />
     </ImageWrapper>
@@ -37,26 +40,10 @@ const About = () => (
     </i>
     <hr />
     <h2>権限について</h2>
-    窓米では、ほとんどの機能に<b>YouTube Data API</b>を使用しています。
-    <br />
-    これは、下記の目的でのみ使用し、また、認証情報はブラウザに保存され、私たちはデータベースなどに保存していません。
-    <br />
-    なお、窓米のソースコードは
-    <ExternalLink href="https://github.com/dotplants/madocome">
-      こちら
+    <ExternalLink href="https://github.com/dotplants/madocome/blob/master/docs/ja/api-permission.md">
+      こちらのドキュメント
     </ExternalLink>
-    で公開しており、GitHub上から直接ZEIT Nowに展開しています。
-    <ul>
-      <li>
-        dotplants.net への権限の付与:
-        これはGoogleの表示の仕様上のもので、私たちはデータベースに保管していないため、窓米にしか使用できません。
-      </li>
-      <li>
-        YouTube 動画、評価、コメント、字幕の表示、編集、完全削除:
-        コメントの取得、投稿に使用します。
-      </li>
-      <li>YouTube アカウントの表示: 該当動画の検索に使用します。</li>
-    </ul>
+    に移動しました。
   </Container>
 );
 
