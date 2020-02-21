@@ -46,8 +46,6 @@ const GlobalStyle = createGlobalStyle({
     boxSizing: 'border-box',
     transition: '120ms ease',
     // for firefox
-    scrollbarColor: ({ theme: { background } }) =>
-      `${lighten(0.2, background)} transparent`,
     scrollbarWidth: 'thin'
   },
   '::-webkit-scrollbar': {
