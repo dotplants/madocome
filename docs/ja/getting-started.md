@@ -15,7 +15,7 @@ YouTube Live の複窓支援ツールです。他の複窓アプリには(恐ら
 
 # ざっくり使い方
 
-![gif](https://i.imgur.com/hiYyBgS.gif)
+<img src="/docs/files/getting-started.gif?raw=true" alt="gif" />
 
 1. みたい配信の URL をコピーして！！
 1. 下のバーのプラスボタン押して！！
@@ -23,7 +23,9 @@ YouTube Live の複窓支援ツールです。他の複窓アプリには(恐ら
 1. 設定して！！
 1. 超！！エキサイティン！！！
 
-> gif で使用させて頂いた動画：
-> [＃05【GTA5】貨物船乗り込む準備する！【アルス・アルマル/にじさんじ】](https://youtu.be/pqronKxfNIM) - [アルス・アルマル](https://www.youtube.com/channel/UCdpUojq0KWZCN9bxXnZwz5w) > [【ポケモン シールド】殿堂入り後ストーリーやるわよ！【にじさんじ / 樋口楓】](https://youtu.be/6XhpD24ivuY) - [樋口楓](https://www.youtube.com/channel/UCsg-YqdqQ-KFF0LNk23BY4A) > [#11【ARK 】パトロールします。【夜見れな／にじさんじ】](https://youtu.be/GDiB6f6u_LE) - [夜見れな](https://www.youtube.com/channel/UCL34fAoFim9oHLbVzMKFavQ)
+> gif で使用させて頂いた動画：  
+> [＃05【GTA5】貨物船乗り込む準備する！【アルス・アルマル/にじさんじ】](https://youtu.be/pqronKxfNIM) - [アルス・アルマル](https://www.youtube.com/channel/UCdpUojq0KWZCN9bxXnZwz5w)  
+> [【ポケモン シールド】殿堂入り後ストーリーやるわよ！【にじさんじ / 樋口楓】](https://youtu.be/6XhpD24ivuY) - [樋口楓](https://www.youtube.com/channel/UCsg-YqdqQ-KFF0LNk23BY4A)  
+> [#11【ARK 】パトロールします。【夜見れな／にじさんじ】](https://youtu.be/GDiB6f6u_LE) - [夜見れな](https://www.youtube.com/channel/UCL34fAoFim9oHLbVzMKFavQ)
 
 設定方法、詳しい使い方などは[他の記事をお読みください。](../README.md)
