@@ -10,6 +10,7 @@ import Post from './post';
 import { Side, Selector, Right, Comments } from './styles';
 import Config from './config';
 import api from '../../utils/api';
+import ExternalLink from '../external-link';
 
 const commentTokens = {};
 const isRunningComment = {};
@@ -230,6 +231,29 @@ const Sidebar = () => {
                 )
               }}
             />
+            <br />
+            <small>
+              <FormattedMessage
+                id="components.side.login_note.title"
+                values={{
+                  terms: (
+                    <ExternalLink href="https://www.youtube.com/t/terms">
+                      <FormattedMessage id="components.side.login_note.terms" />
+                    </ExternalLink>
+                  ),
+                  privacy: (
+                    <ExternalLink href="https://policies.google.com/privacy">
+                      <FormattedMessage id="components.side.login_note.privacy" />
+                    </ExternalLink>
+                  ),
+                  document: (
+                    <ExternalLink href="https://github.com/dotplants/madocome/blob/master/docs/ja/api-permission.md">
+                      <FormattedMessage id="components.side.login_note.document" />
+                    </ExternalLink>
+                  )
+                }}
+              />
+            </small>
           </Alert>
         )}
         {token &&

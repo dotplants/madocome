@@ -11,7 +11,7 @@ import I18nProvider from './utils/locale/provider';
 
 const bgBase = '#000';
 const textBase = '#fff';
-const linkBase = '#036eec';
+const linkBase = '#3689ff';
 const theme = {
   bgBase,
   textBase,

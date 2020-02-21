@@ -5,7 +5,7 @@ const api = ({ path, method = 'GET', data = {}, useToken = true }) =>
   new Promise((resolve, reject) => {
     const token = getConfig('access_token', 'live_token');
 
-    let params;
+    let params = '';
     if (method === 'GET' && data !== {}) {
       params = `?${queryBuilder(data)}`;
     }

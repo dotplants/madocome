@@ -22,6 +22,12 @@
       "please_login": "コメントを表示・投稿するには、 {login} してください。",
       "please_relogin": "トークンの有効期限が切れています。もう一度 {login} してください。",
       "login": "ログイン",
+      "login_note": {
+        "title": "ログインした時点で、YouTubeの {terms} 及び {privacy} に同意したものとします。また、APIの使用目的については {document} を参照してください。",
+        "terms": "利用規約",
+        "privacy": "プライバシーポリシー",
+        "document": "ドキュメント"
+      },
       "error": "システムエラー: データ取得中にエラーが発生しました。YouTube APIに問題が発生しているか、間違った動画IDの可能性があります。",
       "start_stream": "コメントの受信を開始しました✨",
       "stop_stream": "コメントの受信を終了しました🌙",
