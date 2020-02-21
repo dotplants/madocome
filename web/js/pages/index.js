@@ -19,6 +19,18 @@ const Index = () => {
   const { videos, setVideos, conf } = Container.useContainer();
   const [windowWidth, setWindowWidth] = useState(0);
 
+  useEffect(() => {
+    const onKeyDown = ({ keyCode, altKey }) => {
+      // alt + V
+      if (keyCode === 86 && altKey) {
+        addVideo();
+      }
+    };
+
+    window.addEventListener('keydown', onKeyDown, false);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, []);
+
   const addVideo = () => {
     const resolve = data => {
       const obj = data.match(youtubeRegExp) || [];

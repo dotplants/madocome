@@ -84,6 +84,18 @@ const Post = ({ videos }) => {
     return () => window.removeEventListener('click', toggleMenuOpened);
   }, [menuOpened]);
 
+  useEffect(() => {
+    const onKeyDown = ({ ctrlKey, keyCode, metaKey }) => {
+      // Enter + (ctrl / meta)
+      if (keyCode === 13 && (ctrlKey || metaKey)) {
+        post();
+      }
+    };
+
+    window.addEventListener('keydown', onKeyDown, false);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, []);
+
   const post = () => {
     const video = videos[getVideoIndex(commentId)];
     const token = getConfig('access_token', 'live_token');
