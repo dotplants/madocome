@@ -2,7 +2,7 @@ import { getConfig } from './config';
 import queryBuilder from './query-builder';
 
 const api = ({ path, method = 'GET', data = {}, useToken = true }) =>
-  new Promise((resolve, reject) => {
+  new Promise(resolve => {
     const token = getConfig('access_token', 'live_token');
 
     let params = '';
@@ -18,7 +18,7 @@ const api = ({ path, method = 'GET', data = {}, useToken = true }) =>
         'Content-Type': 'application/json'
       }
     })
-      .then(res => (res.ok ? res.json() : reject(res)))
+      .then(res => res.json())
       .then(resolve);
   });
 

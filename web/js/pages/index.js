@@ -9,6 +9,8 @@ import { Main, Wrapper } from '../components/layout';
 import NoVideo from '../components/no-video';
 import Sidebar from '../components/side';
 import { youtubeRegExp, setRatio } from '../utils/env';
+import { getStringData } from '../utils/config';
+import NewUser from '../components/new-user';
 
 const Index = () => {
   const { formatMessage } = useIntl();
@@ -74,6 +76,7 @@ const Index = () => {
         <Sidebar />
       </Wrapper>
       <Footer addVideo={addVideo} />
+      {!getStringData() && <NewUser />}
     </>
   );
 };

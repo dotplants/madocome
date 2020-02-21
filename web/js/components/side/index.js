@@ -21,20 +21,36 @@ const insertTop = (element, newValue) => {
   return newElem;
 };
 
-const relogin = {
-  isSystem: true,
-  body: (
-    <FormattedMessage
-      id="components.side.please_relogin"
-      values={{
-        login: (
-          <a href="/api/auth-login">
-            <FormattedMessage id="components.side.login" />
-          </a>
+const reasonText = reason => {
+  switch (reason) {
+    case 'authError':
+      return {
+        isSystem: true,
+        body: (
+          <FormattedMessage
+            id="components.side.please_relogin"
+            values={{
+              login: (
+                <a href="/api/auth-login">
+                  <FormattedMessage id="components.side.login" />
+                </a>
+              )
+            }}
+          />
         )
-      }}
-    />
-  )
+      };
+    case 'dailyLimitExceeded':
+    case 'quotaExceeded':
+      return {
+        isSystem: true,
+        body: <FormattedMessage id="components.side.error_limit" />
+      };
+    default:
+      return {
+        isSystem: true,
+        body: <FormattedMessage id="components.side.error" />
+      };
+  }
 };
 
 const Sidebar = () => {
@@ -69,9 +85,7 @@ const Sidebar = () => {
 
       if (error) {
         console.error(error);
-        if (error.errors[0].reason === 'authError') {
-          addComment(relogin);
-        }
+        addComment(reasonText(error.errors[0].reason));
         return;
       }
       if (nextPageToken) {
@@ -121,9 +135,7 @@ const Sidebar = () => {
             video,
             body: `ERR: ${JSON.stringify(error)}`
           });
-          if (error.errors[0].reason === 'authError') {
-            addComment(relogin);
-          }
+          addComment(reasonText(error.errors[0].reason));
           return;
         }
         if (!items || !items[0] || !items[0].liveStreamingDetails) {
