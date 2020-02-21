@@ -12,7 +12,7 @@ import Config from './config';
 import api from '../../utils/api';
 
 const commentTokens = {};
-const TIMEOUT = 10 * 1000;
+const isRunningComment = {};
 
 const insertTop = (element, newValue) => {
   const newElem = element.slice();
@@ -43,7 +43,6 @@ const Sidebar = () => {
   const token = getConfig('access_token', 'live_token');
 
   const [prevVideos, setPrevVideos] = useState([]);
-  const [commentGetter, setCommentGetter] = useState({});
 
   const addComment = data => setComments(prev => insertTop(prev, data));
 
@@ -51,6 +50,7 @@ const Sidebar = () => {
     videos.findIndex(video => video.id === videoId);
 
   const getComment = (videoId, liveChatId) => {
+    if (!isRunningComment[videoId]) return;
     const opts = {
       part: 'snippet,authorDetails',
       liveChatId
@@ -61,7 +61,11 @@ const Sidebar = () => {
     api({
       path: 'youtube/v3/liveChat/messages',
       data: opts
-    }).then(({ nextPageToken, items, error }) => {
+    }).then(({ nextPageToken, items, error, pollingIntervalMillis }) => {
+      if (!pollingIntervalMillis) pollingIntervalMillis = 10 * 1000;
+      setTimeout(() => getComment(videoId, liveChatId), pollingIntervalMillis);
+      console.log('[comment polling]', videoId, pollingIntervalMillis);
+
       if (error) {
         console.error(error);
         if (error.errors[0].reason === 'authError') {
@@ -93,12 +97,12 @@ const Sidebar = () => {
         if (!items[index]) {
           clearInterval(delay);
         }
-      }, TIMEOUT / items.length);
+      }, pollingIntervalMillis / items.length);
     });
   };
 
   const addCommentGetter = (video, isForce = false) => {
-    if (commentGetter[video.id]) return;
+    if (isRunningComment[video.id]) return;
     if (video.hideComment && !isForce) return;
 
     api({
@@ -135,13 +139,8 @@ const Sidebar = () => {
           hideComment: false
         });
         forceUpdate();
-        setCommentGetter(prev => ({
-          ...prev,
-          [video.id]: setInterval(
-            () => getComment(video.id, liveChatId),
-            TIMEOUT
-          )
-        }));
+
+        isRunningComment[video.id] = true;
         getComment(video.id, liveChatId);
 
         return addComment({
@@ -161,12 +160,9 @@ const Sidebar = () => {
   };
 
   const removeCommentGetter = video => {
-    if (!commentGetter[video.id]) return;
-    clearInterval(commentGetter[video.id]);
-    setCommentGetter(prev => ({
-      ...prev,
-      [video.id]: null
-    }));
+    if (!isRunningComment[video.id]) return;
+    delete isRunningComment[video.id];
+
     if (getVideoIndex(video.id) !== -1) {
       setVideo(video.id, {
         hideComment: true

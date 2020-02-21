@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useIntl } from 'react-intl';
-import styled from 'styled-components';
 
 import Container from '../container';
 import Footer from '../components/footer';
@@ -10,11 +9,6 @@ import { Main, Wrapper } from '../components/layout';
 import NoVideo from '../components/no-video';
 import Sidebar from '../components/side';
 import { youtubeRegExp, setRatio } from '../utils/env';
-
-const PlayerItem = styled.div({
-  maxWidth: '100%',
-  position: 'relative'
-});
 
 const Index = () => {
   const { formatMessage } = useIntl();
@@ -73,18 +67,7 @@ const Index = () => {
       <Wrapper hideSide={conf.hide_side}>
         <Main useTop={conf.use_top && videos[0]}>
           {videos.map(
-            video =>
-              video && (
-                <PlayerItem
-                  style={{
-                    width: windowWidth / video.ratio,
-                    height: (windowWidth / video.ratio / 16) * 9
-                  }}
-                  key={video.id}
-                >
-                  <Player video={video} />
-                </PlayerItem>
-              )
+            v => v && <Player video={v} key={v.id} width={windowWidth} />
           )}
           {!videos[0] && <NoVideo addVideo={addVideo} />}
         </Main>

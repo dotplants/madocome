@@ -6,7 +6,12 @@ const autoRefreshToken = (isFirst = false) => {
   if (!token || !expiresAt) return;
 
   const timeout = (expiresAt - 10) * 1000 - Date.now();
-  console.log(`will refresh at: ${timeout} (about: ${timeout / 1000}s)`);
+  console.log(
+    '[token]',
+    'will refresh at:',
+    timeout,
+    `(about: ${timeout / 1000}s)`
+  );
   setTimeout(() => {
     fetch(`/api/auth-refresh?token=${token}`)
       .then(response => response.json())

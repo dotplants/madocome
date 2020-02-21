@@ -18,7 +18,14 @@ const MenuButton = styled.div(({ bg }) => ({
   background: bg
 }));
 
-const Player = ({ video }) => {
+const PlayerItem = styled.div(({ width }) => ({
+  maxWidth: '100%',
+  position: 'relative',
+  width,
+  height: (width / 16) * 9
+}));
+
+const Player = ({ video, width }) => {
   const { formatMessage } = useIntl();
   const { videos, setVideos } = Container.useContainer();
   const [menuOpened, setMenuOpened] = useState(false);
@@ -40,7 +47,15 @@ const Player = ({ video }) => {
 
     switch (command) {
       case 'remove':
-        return setVideos(prev => prev.filter(video => video.id !== id));
+        return setVideos(prev => {
+          const next = prev.filter(video => video.id !== id);
+          return next.map(video => {
+            if (!video.pinned) {
+              video.ratio = setRatio(next.length);
+            }
+            return video;
+          });
+        });
       case 'move':
         return setVideos(prev => {
           prev[index] = null;
@@ -54,7 +69,7 @@ const Player = ({ video }) => {
           prev.splice(index, 0, {
             ...video,
             ratio: parseFloat(
-              (video.ratio + (value === 'up' ? -0.1 : 0.1)).toFixed(1)
+              (video.ratio + (value === 'up' ? -0.2 : 0.2)).toFixed(1)
             ),
             pinned: true
           });
@@ -78,7 +93,7 @@ const Player = ({ video }) => {
   };
 
   return (
-    <>
+    <PlayerItem width={width / video.ratio}>
       <YouTube
         videoId={video.id}
         containerClassName="size-max"
@@ -126,12 +141,13 @@ const Player = ({ video }) => {
         </Menu>
       )}
       <MenuButton bg={video.color} onClick={toggleMenuOpened} />
-    </>
+    </PlayerItem>
   );
 };
 
 Player.propTypes = {
-  video: PropTypes.object.isRequired
+  video: PropTypes.object.isRequired,
+  width: PropTypes.number.isRequired
 };
 
 export default memo(Player);
