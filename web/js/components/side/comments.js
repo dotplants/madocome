@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { FormattedMessage } from 'react-intl';
-import { isElement } from 'react-is';
 import styled from 'styled-components';
 
 import Alert from '../alert';
@@ -68,7 +67,7 @@ const Comments = ({ comments, onScroll, divRef }) => {
           .map((comment, key) => (
             <Comment comment={comment} key={comment.id || key} conf={conf} />
           ))
-          .filter((v, i) => isElement(v) && i < 150)}
+          .filter((v, i) => i < 150)}
     </StyledComments>
   );
 };

@@ -17,7 +17,9 @@
     "format": "npm-run-all format:* -s",
     "build:client": "parcel build web/index.html -d public --no-source-maps",
     "build": "npm-run-all build:* -s",
-    "now-dev": "parcel web/index.html -d public --port $PORT"
+    "now-dev": "parcel serve web/index.html -d public --port $PORT",
+    "dev:parcel": "parcel serve web/index.html -d public --port 3000",
+    "dev:now": "now dev"
   },
   "devDependencies": {
     "@babel/core": "^7.8.4",
@@ -45,7 +47,6 @@
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "react-intl": "^3.12.0",
-    "react-is": "^16.12.0",
     "react-router-dom": "^5.1.2",
     "react-youtube": "^7.9.0",
     "styled-components": "^5.0.1",
