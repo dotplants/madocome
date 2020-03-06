@@ -28,7 +28,7 @@
     "@yuzulabo/eslint-config": "~1",
     "@yuzulabo/prettier-config": "~1",
     "babel-eslint": "^10.1.0",
-    "cross-env": "^7.0.1",
+    "cross-env": "^7.0.2",
     "eslint": "~6",
     "eslint-plugin-react": "^7.18.3",
     "npm-run-all": "~4",
