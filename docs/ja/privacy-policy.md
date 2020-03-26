@@ -32,4 +32,4 @@ madocome であなたのアカウントを使用できなくしたい場合、�
 
 - Mail: contact+madocome(at)nzws.me
 - Mastodon: [@nzws@don.nzws.me](https://don.nzws.me/@nzws)
-- Keybase: [@nzws](https://keybase.io/@nzws)
+- Keybase: [@nzws](https://keybase.io/nzws)

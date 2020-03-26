@@ -53,7 +53,7 @@ const Comments = ({ comments, onScroll, divRef }) => {
                   </ExternalLink>
                 ),
                 document: (
-                  <ExternalLink href="https://github.com/dotplants/madocome/blob/master/docs/ja/api-permission.md">
+                  <ExternalLink href="https://github.com/dotplants/madocome/blob/master/docs/ja/privacy-policy.md">
                     <FormattedMessage id="components.side.login_note.document" />
                   </ExternalLink>
                 )

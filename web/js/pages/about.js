@@ -39,11 +39,11 @@ const About = () => (
       </ExternalLink>
     </i>
     <hr />
-    <h2>権限について</h2>
-    <ExternalLink href="https://github.com/dotplants/madocome/blob/master/docs/ja/api-permission.md">
+    <h2>アカウントへの権限、データの利用について</h2>
+    <ExternalLink href="https://github.com/dotplants/madocome/blob/master/docs/ja/privacy-policy.md">
       こちらのドキュメント
     </ExternalLink>
-    に移動しました。
+    をお読みください。
   </Container>
 );
 
