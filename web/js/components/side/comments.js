@@ -18,10 +18,9 @@ const StyledComments = styled.div({
   flexDirection: 'column-reverse'
 });
 
-const token = getConfig('access_token', 'live_token');
-
 const Comments = ({ comments, onScroll, divRef }) => {
   const { conf } = Container.useContainer();
+  const token = getConfig('access_token', 'live_token');
 
   return (
     <StyledComments onScroll={onScroll} ref={divRef}>

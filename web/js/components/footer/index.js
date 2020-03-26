@@ -7,7 +7,7 @@ import { lighten } from 'polished';
 import Container from '../../container';
 import ExternalLink from '../external-link';
 import Icon from '../icon';
-import { getStringData } from '../../utils/config';
+import { getConfig, getStringData } from '../../utils/config';
 
 const base = styled.div(({ theme }) => ({
   position: 'fixed',
@@ -37,6 +37,11 @@ const Right = styled.div({
   float: 'right'
 });
 
+const Privacy = styled.span({
+  marginRight: '5px',
+  fontSize: 'small'
+});
+
 const MarginLeft = {
   marginLeft: '1.5rem'
 };
@@ -53,6 +58,29 @@ const Footer = ({ addVideo }) => {
       `${location.origin}/shared?${data}`
     );
   };
+  const logOut = () => {
+    const accept = confirm(
+      formatMessage({ id: 'components.footer.log_out.desc' })
+    );
+    if (!accept) {
+      return;
+    }
+    const token = getConfig('access_token', 'live_token');
+    fetch(`https://accounts.google.com/o/oauth2/revoke?token=${token}`, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(res => res.json())
+      .then(({ error }) => {
+        if (error) {
+          alert(formatMessage({ id: 'components.footer.log_out.failed' }));
+        }
+        localStorage.removeItem('live_token');
+
+        location.reload();
+      });
+  };
 
   return (
     <>
@@ -68,6 +96,13 @@ const Footer = ({ addVideo }) => {
       {!conf.footer_is_small && (
         <StyledFooter>
           <Right>
+            <Privacy>
+              <ExternalLink href="https://github.com/dotplants/madocome/blob/master/docs/ja/privacy-policy.md">
+                {formatMessage({ id: 'components.footer.privacy_policy' })}
+              </ExternalLink>{' '}
+              /
+            </Privacy>
+
             <b>
               <small>
                 <ExternalLink href="/about">madocome</ExternalLink> built by{' '}
@@ -117,6 +152,15 @@ const Footer = ({ addVideo }) => {
             onClick={generateLink}
             title={formatMessage({
               id: 'components.footer.generate_link.title'
+            })}
+            style={MarginLeft}
+          />
+
+          <Icon
+            icon="sign-out-alt"
+            onClick={logOut}
+            title={formatMessage({
+              id: 'components.footer.log_out.title'
             })}
             style={MarginLeft}
           />
