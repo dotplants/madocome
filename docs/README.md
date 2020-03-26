@@ -13,4 +13,4 @@
 - [はじめに](ja/getting-started.md)
 - [項目の説明](ja/item-desc.md)
 - [ショートカットキー](ja/shortcut-keys.md)
-- [アカウントへの権限、データの利用について](ja/privacy-policy.md)
+- [プライバシーポリシー](ja/privacy-policy.md)

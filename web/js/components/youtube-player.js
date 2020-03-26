@@ -101,7 +101,7 @@ const Player = ({ video, width }) => {
           width: '100%',
           height: '100%',
           playerVars: {
-            autoplay: 1,
+            autoplay: 0,
             allowfullscreen: 1
           }
         }}
