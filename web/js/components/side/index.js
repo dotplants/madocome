@@ -98,9 +98,7 @@ const Sidebar = () => {
 
       items.map(item => {
         item.video = videos[i];
-        item.id = Math.random()
-          .toString(36)
-          .slice(-8);
+        item.id = Math.random().toString(36).slice(-8);
         return item;
       });
 
