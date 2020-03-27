@@ -47,7 +47,7 @@ const Index = () => {
       }
     };
 
-    checkName();
+    getStringData('live_token') && checkName();
     window.addEventListener('keydown', onKeyDown, false);
     return () => window.removeEventListener('keydown', onKeyDown);
   }, []);

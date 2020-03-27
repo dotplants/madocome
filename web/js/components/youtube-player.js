@@ -180,20 +180,20 @@ const Player = ({ video, width }) => {
           <Icon icon="arrows-alt-h" />
         </FooterItem>
 
-        {videos.length !== index + 1 && (
-          <FooterItem
-            onClick={() => updateVideo(video.id, 'move', 'right')}
-            title={formatMessage({ id: 'components.player.move-to-right' })}
-          >
-            <Icon icon="arrow-right" />
-          </FooterItem>
-        )}
         {index !== 0 && (
           <FooterItem
             onClick={() => updateVideo(video.id, 'move', 'left')}
             title={formatMessage({ id: 'components.player.move-to-left' })}
           >
             <Icon icon="arrow-left" />
+          </FooterItem>
+        )}
+        {videos.length !== index + 1 && (
+          <FooterItem
+            onClick={() => updateVideo(video.id, 'move', 'right')}
+            title={formatMessage({ id: 'components.player.move-to-right' })}
+          >
+            <Icon icon="arrow-right" />
           </FooterItem>
         )}
 
