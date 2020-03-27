@@ -9,8 +9,9 @@ import { Main, Wrapper } from '../components/layout';
 import NoVideo from '../components/no-video';
 import Sidebar from '../components/side';
 import { youtubeRegExp, setRatio } from '../utils/env';
-import { getStringData } from '../utils/config';
+import { getStringData, setConfig } from '../utils/config';
 import NewUser from '../components/new-user';
+import api from '../utils/api';
 
 const length = 6;
 
@@ -18,6 +19,25 @@ const Index = () => {
   const { formatMessage } = useIntl();
   const { videos, setVideos, conf } = Container.useContainer();
   const [windowWidth, setWindowWidth] = useState(0);
+
+  const checkName = () => {
+    api({
+      path: 'youtube/v3/channels',
+      data: {
+        part: 'snippet',
+        maxResults: 1,
+        mine: true
+      }
+    }).then(({ error, items }) => {
+      if (error) {
+        alert(JSON.stringify(error));
+      }
+      const data = items[0].snippet;
+      console.log(data);
+      setConfig('channel_name', data.title, 'live_token');
+      setConfig('channel_avatar', data.thumbnails.medium.url, 'live_token');
+    });
+  };
 
   useEffect(() => {
     const onKeyDown = ({ keyCode, altKey }) => {
@@ -27,6 +47,7 @@ const Index = () => {
       }
     };
 
+    checkName();
     window.addEventListener('keydown', onKeyDown, false);
     return () => window.removeEventListener('keydown', onKeyDown);
   }, []);

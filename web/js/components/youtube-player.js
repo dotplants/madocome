@@ -1,44 +1,80 @@
-import React, { useState, useEffect, memo } from 'react';
-import { FormattedMessage, useIntl } from 'react-intl';
+import React, { useEffect, memo, useState } from 'react';
+import { useIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 import YouTube from 'react-youtube';
 import styled from 'styled-components';
 import Container from '../container';
 import Icon from './icon';
-import { Menu, MenuItem, MenuHr } from './menu';
 import { setRatio } from '../utils/env';
-
-const MenuButton = styled.div(({ bg }) => ({
-  cursor: 'pointer',
-  width: '25px',
-  height: '25px',
-  position: 'absolute',
-  bottom: '15px',
-  right: '15px',
-  background: bg
-}));
+import { lighten } from 'polished';
+import api from '../utils/api';
 
 const PlayerItem = styled.div(({ width }) => ({
   maxWidth: '100%',
   position: 'relative',
   width,
-  height: (width / 16) * 9
+  height: (width / 16) * 9 + 26
 }));
+
+const PlayerWrapper = styled.div({
+  height: 'calc(100% - 26px)'
+});
+
+const Footer = styled.div(({ theme }) => ({
+  width: '100%',
+  background: lighten(0.2, theme.bgBase),
+  display: 'flex'
+}));
+
+const FooterItem = styled.div(({ theme, bg, noBtn }) => ({
+  padding: '5px',
+  cursor: !noBtn && 'pointer',
+  fontSize: '0.95rem',
+  color: theme.text,
+  ':hover': !noBtn && {
+    background: lighten(0.4, theme.bgBase)
+  },
+  background: bg,
+  width: bg && '20px'
+}));
+
+const FooterPartition = styled.div({
+  marginLeft: 'auto'
+});
 
 const Player = ({ video, width }) => {
   const { formatMessage } = useIntl();
   const { videos, setVideos } = Container.useContainer();
-  const [menuOpened, setMenuOpened] = useState(false);
+  const [viewers, setViewers] = useState('');
   const index = videos.findIndex(v => v && v.id === video.id);
 
-  const toggleMenuOpened = () => setMenuOpened(prev => !prev);
-
   useEffect(() => {
-    if (!menuOpened) return;
+    const updateViewer = () => {
+      api({
+        path: 'youtube/v3/videos',
+        data: {
+          part: 'liveStreamingDetails',
+          id: video.id,
+          maxResults: 1
+        }
+      }).then(({ error, items }) => {
+        if (error) {
+          return;
+        }
+        if (!items || !items[0] || !items[0].liveStreamingDetails) {
+          return;
+        }
 
-    window.addEventListener('click', toggleMenuOpened, false);
-    return () => window.removeEventListener('click', toggleMenuOpened);
-  }, [menuOpened]);
+        const data = items[0].liveStreamingDetails;
+        console.log(video.id, data);
+        setViewers(data.concurrentViewers);
+      });
+    };
+    const interval = setInterval(updateViewer, 1000 * 60);
+    updateViewer();
+
+    return () => clearInterval(interval);
+  }, []);
 
   const updateVideo = (id, command, value) => {
     if (index === undefined) {
@@ -69,7 +105,7 @@ const Player = ({ video, width }) => {
           prev.splice(index, 0, {
             ...video,
             ratio: parseFloat(
-              (video.ratio + (value === 'up' ? -0.2 : 0.2)).toFixed(1)
+              (video.ratio + (value === 'up' ? -0.1 : 0.1)).toFixed(1)
             ),
             pinned: true
           });
@@ -94,53 +130,80 @@ const Player = ({ video, width }) => {
 
   return (
     <PlayerItem width={width / video.ratio}>
-      <YouTube
-        videoId={video.id}
-        containerClassName="size-max"
-        opts={{
-          width: '100%',
-          height: '100%',
-          playerVars: {
-            autoplay: 0,
-            allowfullscreen: 1
-          }
-        }}
-      />
-      {menuOpened && (
-        <Menu>
-          <MenuItem onClick={() => updateVideo(video.id, 'remove')}>
-            <Icon icon="power-off" />{' '}
-            <FormattedMessage id="components.player.delete" />
-          </MenuItem>
-          <MenuHr />
-          {videos.length !== index + 1 && (
-            <MenuItem onClick={() => updateVideo(video.id, 'move', 'right')}>
-              <Icon icon="arrow-right" />{' '}
-              <FormattedMessage id="components.player.move-to-right" />
-            </MenuItem>
-          )}
-          {index !== 0 && (
-            <MenuItem onClick={() => updateVideo(video.id, 'move', 'left')}>
-              <Icon icon="arrow-left" />{' '}
-              <FormattedMessage id="components.player.move-to-left" />
-            </MenuItem>
-          )}
-          <MenuHr />
-          <MenuItem onClick={() => updateVideo(video.id, 'resize', 'up')}>
-            <Icon icon="expand-alt" />{' '}
-            <FormattedMessage id="components.player.larger" />
-          </MenuItem>
-          <MenuItem onClick={() => updateVideo(video.id, 'resize', 'down')}>
-            <Icon icon="compress-alt" />{' '}
-            <FormattedMessage id="components.player.smaller" />
-          </MenuItem>
-          <MenuItem onClick={() => updateVideo(video.id, 'reset')}>
-            <Icon icon="arrows-alt-h" />{' '}
-            <FormattedMessage id="components.player.reset" />
-          </MenuItem>
-        </Menu>
-      )}
-      <MenuButton bg={video.color} onClick={toggleMenuOpened} />
+      <PlayerWrapper>
+        <YouTube
+          videoId={video.id}
+          containerClassName="size-max"
+          opts={{
+            width: '100%',
+            height: '100%',
+            playerVars: {
+              autoplay: 0, // ガイドライン遵守の為
+              allowfullscreen: 1
+            }
+          }}
+        />
+      </PlayerWrapper>
+
+      <Footer>
+        <FooterItem
+          title={formatMessage({ id: 'components.player.color' })}
+          bg={video.color}
+          noBtn
+        />
+        <FooterItem
+          noBtn
+          title={formatMessage({ id: 'components.player.viewers' })}
+        >
+          <Icon icon="users" style={{ marginRight: '3px' }} />
+          {viewers || '?'}
+        </FooterItem>
+
+        <FooterPartition />
+
+        <FooterItem
+          onClick={() => updateVideo(video.id, 'resize', 'up')}
+          title={formatMessage({ id: 'components.player.larger' })}
+        >
+          <Icon icon="expand-alt" />
+        </FooterItem>
+        <FooterItem
+          onClick={() => updateVideo(video.id, 'resize', 'down')}
+          title={formatMessage({ id: 'components.player.smaller' })}
+        >
+          <Icon icon="compress-alt" />
+        </FooterItem>
+        <FooterItem
+          onClick={() => updateVideo(video.id, 'reset')}
+          title={formatMessage({ id: 'components.player.reset' })}
+        >
+          <Icon icon="arrows-alt-h" />
+        </FooterItem>
+
+        {videos.length !== index + 1 && (
+          <FooterItem
+            onClick={() => updateVideo(video.id, 'move', 'right')}
+            title={formatMessage({ id: 'components.player.move-to-right' })}
+          >
+            <Icon icon="arrow-right" />
+          </FooterItem>
+        )}
+        {index !== 0 && (
+          <FooterItem
+            onClick={() => updateVideo(video.id, 'move', 'left')}
+            title={formatMessage({ id: 'components.player.move-to-left' })}
+          >
+            <Icon icon="arrow-left" />
+          </FooterItem>
+        )}
+
+        <FooterItem
+          onClick={() => updateVideo(video.id, 'remove')}
+          title={formatMessage({ id: 'components.player.delete' })}
+        >
+          <Icon icon="power-off" />
+        </FooterItem>
+      </Footer>
     </PlayerItem>
   );
 };

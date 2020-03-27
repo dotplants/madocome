@@ -60,7 +60,7 @@
         "not_found": "動画が読み込まれていないか、コメントの受信が開始されていません。",
         "please_login": "ログインしてください。",
         "error": "エラー: コメントの投稿に失敗しました。",
-        "placeholder": "コメントを投稿...",
+        "placeholder": "{name} としてコメントを投稿...",
         "post": "投稿",
         "posting_now": "やってます...",
         "comment": "{block} でコメント",
@@ -79,13 +79,15 @@
       "button": "ボタン"
     },
     "player": {
+      "color": "これがこの動画のカラーです：横にこのカラーがついているコメントが動画のコメントです",
       "not_found": "この動画IDは存在しません。",
-      "delete": "削除",
+      "delete": "視聴をやめる",
       "move-to-right": "次に移動",
       "move-to-left": "前に移動",
-      "larger": "少し大きく",
-      "smaller": "少し小さく",
-      "reset": "リセット"
+      "larger": "動画サイズを少し大きく",
+      "smaller": "動画サイズを少し小さく",
+      "reset": "動画サイズをリセット",
+      "viewers": "視聴人数"
     },
     "new_user": {
       "title": "\uD83D\uDCE3 窓米 (madocome) のご利用は初めてですか？",

@@ -146,7 +146,10 @@ const Post = ({ videos }) => {
       <Input
         type="text"
         value={value}
-        placeholder={formatMessage({ id: 'components.side.post.placeholder' })}
+        placeholder={formatMessage(
+          { id: 'components.side.post.placeholder' },
+          { name: getConfig('channel_name', 'live_token') }
+        )}
         onChange={e => setValue(e.target.value)}
       />
 
