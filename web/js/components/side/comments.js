@@ -63,10 +63,30 @@ const Comments = ({ comments, onScroll, divRef }) => {
       )}
       {token &&
         comments
-          .map((comment, key) => (
-            <Comment comment={comment} key={comment.id || key} conf={conf} />
-          ))
-          .filter((v, i) => i < 150)}
+          .map((comment, key) => {
+            if (comment?.snippet?.textMessageDetails) {
+              const author = comment?.authorDetails;
+              if (
+                (author.isChatOwner && conf.hide_owner) ||
+                (author.isChatModerator && conf.hide_mod) ||
+                (author.isVerified && conf.hide_verified) ||
+                (author.isChatSponsor && conf.hide_sponsor) ||
+                (conf.hide_anonymous &&
+                  !author.isChatOwner &&
+                  !author.isChatModerator &&
+                  !author.isVerified &&
+                  !author.isChatSponsor)
+              ) {
+                return null;
+              }
+            }
+
+            return (
+              <Comment comment={comment} key={comment.id || key} conf={conf} />
+            );
+          })
+          .filter(v => v)
+          .filter((v, i) => i < 200)}
     </StyledComments>
   );
 };

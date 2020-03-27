@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import React, { memo, useState } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { darken } from 'polished';
@@ -22,7 +22,8 @@ const tiers = [
   '#ff3928'
 ];
 
-const StyledComment = styled.div(({ color, hideLong, tier }) => ({
+const StyledComment = styled.div(({ color, hideLong, tier, hasCursor }) => ({
+  cursor: hasCursor && 'pointer',
   borderLeft: `solid 3px ${color}`,
   width: '100%',
   textAlign: 'left',
@@ -58,6 +59,9 @@ const SuperChatComment = styled.div({
 });
 
 const Comment = ({ comment, conf }) => {
+  const [isExpand, setIsExpand] = useState(false);
+  const toggleExpand = () => setIsExpand(prev => !prev);
+
   if (comment.isSystem) {
     const style = {};
     if (comment.video) {
@@ -93,26 +97,17 @@ const Comment = ({ comment, conf }) => {
   }
 
   if (comment.snippet.textMessageDetails) {
-    if (
-      (author.isChatOwner && conf.hide_owner) ||
-      (author.isChatModerator && conf.hide_mod) ||
-      (author.isVerified && conf.hide_verified) ||
-      (author.isChatSponsor && conf.hide_sponsor) ||
-      (conf.hide_anonymous &&
-        !author.isChatOwner &&
-        !author.isChatModerator &&
-        !author.isVerified &&
-        !author.isChatSponsor)
-    ) {
-      return <></>;
-    }
-
     return (
-      <StyledComment color={comment.video.color} hideLong={conf.hide_longtext}>
+      <StyledComment
+        color={comment.video.color}
+        hideLong={isExpand ? false : conf.hide_longtext}
+        onClick={toggleExpand}
+        hasCursor
+      >
         {author && (
           <UserLink href={author.channelUrl}>
             <Avatar src={author.profileImageUrl} />
-            <User author={author} conf={conf} />
+            <User author={author} conf={conf} forceName={isExpand} />
           </UserLink>
         )}
         {comment.snippet.textMessageDetails.messageText}

@@ -37,7 +37,18 @@ const Config = ({
           </small>
         </MenuItem>
       )}
+
       <MenuHr />
+      <MenuItem>
+        <b>
+          <FormattedMessage id="components.side.menu.display.title" />
+        </b>
+        <br />
+        <small>
+          <FormattedMessage id="components.side.menu.display.note" />
+        </small>
+      </MenuItem>
+
       <MenuItem onClick={() => setConf('hide_username', !conf.hide_username)}>
         <Icon icon={conf.hide_username ? 'check-square' : 'square'} />{' '}
         <FormattedMessage id="components.side.menu.hide_username" />
@@ -46,6 +57,7 @@ const Config = ({
         <Icon icon={conf.hide_longtext ? 'check-square' : 'square'} />{' '}
         <FormattedMessage id="components.side.menu.hide_longtext" />
       </MenuItem>
+
       <MenuHr />
       <MenuItem>
         <b>
