@@ -6,7 +6,7 @@ import { lighten } from 'polished';
 
 import Icon from '../icon';
 import { MenuItem, Menu } from '../menu';
-import { getConfig } from '../../utils/config';
+import { getConfig, getStringData } from '../../utils/config';
 import api from '../../utils/api';
 
 const StyledPostWrapper = styled.div(({ theme }) => ({
@@ -71,6 +71,7 @@ const Post = ({ videos }) => {
   const { formatMessage } = useIntl();
   const [value, setValue] = useState('');
   const [commentId, setCommentId] = useState('');
+  const [channelName, setChannelName] = useState('');
   const [menuOpened, setMenuOpened] = useState(false);
   const [isSubmitting, setSubmitting] = useState(false);
 
@@ -84,6 +85,24 @@ const Post = ({ videos }) => {
     return () => window.removeEventListener('click', toggleMenuOpened);
   }, [menuOpened]);
 
+  const checkName = () => {
+    api({
+      path: 'youtube/v3/channels',
+      data: {
+        part: 'snippet',
+        maxResults: 1,
+        mine: true
+      }
+    }).then(({ error, items }) => {
+      if (error) {
+        alert(JSON.stringify(error));
+      }
+      const data = items[0].snippet;
+      console.log(data);
+      setChannelName(data.title);
+    });
+  };
+
   useEffect(() => {
     const onKeyDown = ({ ctrlKey, keyCode, metaKey }) => {
       // Enter + (ctrl / meta)
@@ -92,6 +111,7 @@ const Post = ({ videos }) => {
       }
     };
 
+    getStringData('live_token') && checkName();
     window.addEventListener('keydown', onKeyDown, false);
     return () => window.removeEventListener('keydown', onKeyDown);
   }, []);
@@ -148,7 +168,7 @@ const Post = ({ videos }) => {
         value={value}
         placeholder={formatMessage(
           { id: 'components.side.post.placeholder' },
-          { name: getConfig('channel_name', 'live_token') }
+          { name: channelName }
         )}
         onChange={e => setValue(e.target.value)}
       />
