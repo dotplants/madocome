@@ -95,7 +95,7 @@ const Post = ({ videos }) => {
       }
     }).then(({ error, items }) => {
       if (error) {
-        alert(JSON.stringify(error));
+        return;
       }
       const data = items[0].snippet;
       console.log(data);
