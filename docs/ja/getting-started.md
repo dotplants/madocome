@@ -2,30 +2,25 @@
 
 # はじめに
 
-## [窓米](https://madocome.dotplants.net/)ってなんだよ
+## [窓米](https://madocome.dotplants.net/) ってなんだよ
 
-YouTube Live の複窓支援ツールです。他の複窓アプリには(恐らく)ない特徴として、**複数放送のコメントをいっぺんにまとめて見たり、表示コメントの柔軟な制御ができる**特徴があります。逆に窓の移動は苦手です。  
+YouTube Live の複窓支援ツールです。**複数放送のコメントをいっぺんにまとめて見たり、表示コメントの柔軟な制御ができる**特徴があります。配信は見えません。他のツールと組み合わせて使うことを想定しています。  
 → コメントに特化した複窓アプリ
 
-- スマホには対応してません。恐らくコメント描画のパフォーマンスがえげつないので対応予定もないです。
 - 現在進行中の生放送にのみ対応しています。リプレイは使用できません。
-- Beta 版なのでバグります。Issue 立ててくれると嬉しいです。(それか[Twitter: @nzws_me](https://twitter.com/nzws_me)か[Mastodon: @nzws@don.nzws.me](https://don.nzws.me/@nzws)あたりでも反応できるかも)
+- Beta 版なのでバグります。Issue 立ててくれると嬉しいです。
 - 他に機能要望あれば Issue か PR 立ててくれると嬉しいです。
 - ZEIT Now 上に展開しているので madocome.dotplants.net 自体が落ちる事はそうそうありません。(もし動かなかったらバグってるか**API の制限突き抜けてる**かのどっちか)
+- 大人の事情で配信再生機能は消えました
 
 # ざっくり使い方
 
-<img src="/docs/files/getting-started.gif?raw=true" alt="gif" />
+<!-- <img src="/docs/files/getting-started.gif?raw=true" alt="gif" /> -->
 
 1. みたい配信の URL をコピーして！！
 1. 下のバーのプラスボタン押して！！
 1. 1~2 を繰り返して！！
 1. 設定して！！
 1. 超！！エキサイティン！！！
-
-> gif で使用させて頂いた動画：  
-> [＃05【GTA5】貨物船乗り込む準備する！【アルス・アルマル/にじさんじ】](https://youtu.be/pqronKxfNIM) - [アルス・アルマル](https://www.youtube.com/channel/UCdpUojq0KWZCN9bxXnZwz5w)  
-> [【ポケモン シールド】殿堂入り後ストーリーやるわよ！【にじさんじ / 樋口楓】](https://youtu.be/6XhpD24ivuY) - [樋口楓](https://www.youtube.com/channel/UCsg-YqdqQ-KFF0LNk23BY4A)  
-> [#11【ARK 】パトロールします。【夜見れな／にじさんじ】](https://youtu.be/GDiB6f6u_LE) - [夜見れな](https://www.youtube.com/channel/UCL34fAoFim9oHLbVzMKFavQ)
 
 設定方法、詳しい使い方などは[他の記事をお読みください。](../README.md)

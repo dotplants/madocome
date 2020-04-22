@@ -65,13 +65,13 @@ const App = () => (
     <ThemeProvider theme={theme}>
       <Normalize />
       <GlobalStyle />
-      <I18nProvider locale="ja">
-        <Container.Provider>
+      <Container.Provider>
+        <I18nProvider>
           <BrowserRouter>
             <Routes />
           </BrowserRouter>
-        </Container.Provider>
-      </I18nProvider>
+        </I18nProvider>
+      </Container.Provider>
     </ThemeProvider>
   </ErrorBoundary>
 );

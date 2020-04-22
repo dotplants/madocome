@@ -55,9 +55,13 @@ const PostConfig = styled.button(({ theme }) => ({
 }));
 
 const StyledMenu = styled(Menu)({
-  right: 'initial',
   left: 0,
-  bottom: 0
+  bottom: 0,
+  '> button': {
+    overflow: 'hidden',
+    whiteSpace: 'nowrap',
+    textOverflow: 'ellipsis'
+  }
 });
 
 const ColorBlock = styled.span(({ bg }) => ({
@@ -67,13 +71,14 @@ const ColorBlock = styled.span(({ bg }) => ({
   background: bg
 }));
 
-const Post = ({ videos }) => {
+const Post = ({ videos, liveDetails }) => {
   const { formatMessage } = useIntl();
   const [value, setValue] = useState('');
   const [commentId, setCommentId] = useState('');
   const [channelName, setChannelName] = useState('');
   const [menuOpened, setMenuOpened] = useState(false);
   const [isSubmitting, setSubmitting] = useState(false);
+  const details = JSON.parse(liveDetails);
 
   const toggleMenuOpened = () => setMenuOpened(prev => !prev);
   const getVideoIndex = videoId => videos.findIndex(({ id }) => id === videoId);
@@ -168,7 +173,7 @@ const Post = ({ videos }) => {
         value={value}
         placeholder={formatMessage(
           { id: 'components.side.post.placeholder' },
-          { name: channelName }
+          { name: channelName, channel: details[commentId]?.channel }
         )}
         onChange={e => setValue(e.target.value)}
       />
@@ -190,12 +195,8 @@ const Post = ({ videos }) => {
           <StyledMenu>
             {videos.map(video => (
               <MenuItem key={video.id} onClick={() => setCommentId(video.id)}>
-                <FormattedMessage
-                  id="components.side.post.comment"
-                  values={{
-                    block: <ColorBlock bg={video.color} />
-                  }}
-                />
+                <ColorBlock bg={video.color} />{' '}
+                <b>{details[video.id]?.channel}</b>
               </MenuItem>
             ))}
           </StyledMenu>
@@ -217,7 +218,8 @@ const Post = ({ videos }) => {
 };
 
 Post.propTypes = {
-  videos: PropTypes.array.isRequired
+  videos: PropTypes.array.isRequired,
+  liveDetails: PropTypes.string
 };
 
 export default memo(Post);

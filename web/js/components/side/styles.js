@@ -2,15 +2,17 @@ import styled from 'styled-components';
 import { lighten } from 'polished';
 import { Menu } from '../menu';
 
-export const Side = styled.div(({ theme, isHide }) => ({
-  display: isHide ? 'none' : 'grid',
+export const Side = styled.div(({ theme }) => ({
+  display: 'grid',
   height: '100vh',
-  gridRow: 1,
-  gridColumn: 2,
   background: lighten(0.18, theme.bgBase),
   boxShadow: theme.shadow,
   gridTemplateRows: 'auto 1fr auto',
-  gridTemplateColumns: '1fr'
+  gridTemplateColumns: '1fr',
+  width: '500px',
+  '@media screen and (max-width: 700px)': {
+    width: '100%'
+  }
 }));
 
 export const Selector = styled.div(({ theme }) => ({
@@ -27,10 +29,16 @@ export const Right = styled.div({
 });
 
 export const StyledMenu = styled(Menu)({
-  bottom: 'initial',
-  top: '15px',
-  right: '15px',
-  width: 400 - 15 * 2
+  bottom: '0',
+  top: '0',
+  right: '50%',
+  transform: 'translateX(50%)',
+  width: '500px',
+  height: '100%',
+  overflowY: 'auto',
+  '@media screen and (max-width: 700px)': {
+    width: '100%'
+  }
 });
 
 export const ColorBlock = styled.span(({ bg }) => ({

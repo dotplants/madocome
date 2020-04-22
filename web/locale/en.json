@@ -1,0 +1,97 @@
+{
+  "title": "madocome (Beta)",
+  "components": {
+    "footer": {
+      "log_out": {
+        "title": "Log out",
+        "desc": "Are you sure you want to log out?",
+        "failed": "アクセス権の取り消しができませんでした。もしアクセス権を完全に削除したい場合、Googleのセキュリティ設定から手動で削除してください。"
+      }
+    },
+    "side": {
+      "please_login": "To view and post comments, please {login}.",
+      "please_relogin": "The token has expired. Please {login} again.",
+      "login": "Log in",
+      "login_note": {
+        "title": "To login, you agree to YouTube's {terms} and {privacy}. See {document} for API and data usage.",
+        "terms": "Terms of Service",
+        "privacy": "Privacy Policy",
+        "document": "madocome Privacy Policy (ja)"
+      },
+      "start_stream": "Started receiving comments ✨",
+      "stop_stream": "Ended receiving comments 🌙",
+      "menu": {
+        "hide_username": "Do not display the user name",
+        "hide_longtext": "Omit the lengthy comment",
+        "display": {
+          "title": "Display settings",
+          "note": "* You can expand the original text by clicking."
+        },
+        "show_user": {
+          "title": "View comments from the following users:",
+          "note": "* コメント参照元のチャンネルの視点からの権限に基づきます / Super chat and super stickers are all displayed",
+          "owner": "Channel owner",
+          "mod": "Moderator",
+          "verified": "Verified users",
+          "sponsor": "Membership user",
+          "anonymous": "Other"
+        },
+        "done": "Close",
+        "add": "Add a livestream from clipboard (Alt + V)",
+        "logout": "Log out",
+        "about": {
+          "title": "madocome Beta",
+          "help": "Open documents",
+          "privacy": "View the privacy policy (ja)"
+        },
+        "videos": {
+          "color": "これがこの動画のカラーです：横にこのカラーがついているコメントが動画のコメントです",
+          "delete": "Stop watching",
+          "viewers": "Viewers count",
+          "get-link": "Open the livestream in a new tab"
+        },
+        "language_default": "Default (following browser)",
+        "open_window": "Reopen as a frameless window"
+      },
+      "post": {
+        "not_found": "Please select the live stream you want to comment on first.",
+        "please_login": "Please log in.",
+        "error": "Error: Failed to post a comment.",
+        "placeholder": "Post a comment as {name} to {channel}...",
+        "post": "Post",
+        "posting_now": "Posting...",
+        "select": "Select livestream"
+      },
+      "introduction": {
+        "title": "What is this?: A tool for viewing comments from multiple live streams.",
+        "body": "After logging in, let's add a livestream!: Copy the YouTube Live's URL, press ▽ at the top to open the menu, and click \"{add}\".",
+        "add": "Add a livestream from clipboard"
+      }
+    },
+    "comment": {
+      "owner": "Channel owner",
+      "mod": "Moderator",
+      "verified": "Verified users",
+      "sponsor": "Membership user"
+    }
+  },
+  "pages": {
+    "index": {
+      "error_url": "Parse error: It doesn't seem to be the youtube URL.",
+      "error_already": "This URL has already been added.",
+      "error_length": "{length}個まで追加できます。",
+      "paste_url": "Please paste YouTube Live's URL: (your browser does not support clipboard API)"
+    },
+    "shared": {
+      "note": "この設定を適用すると、現在の設定は失われます。よろしいですか？",
+      "error_verify": "この設定は不正なため使用できません。",
+      "error_broken": "この設定は壊れているため使用できません。"
+    }
+  },
+  "errors": {
+    "default": "Error: An error occurred while retrieving data. There seems to be a problem with the YouTube API or the video id.",
+    "limit": "Error: YouTube Data APIのレートリミットに達しました。コメントの取得ができません。",
+    "not_found": "Error: 該当動画のチャットは存在しません。この放送は既に終了しているか、存在しない可能性があります。",
+    "no_livestream": "Error: This is not the URL of a livestream, or an ending livestream has been detected."
+  }
+}

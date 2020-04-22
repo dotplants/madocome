@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 
 import Container from '../../container';
 import Icon from '../icon';
@@ -56,10 +56,18 @@ const reasonText = reason => {
 };
 
 const Sidebar = () => {
-  const { videos, conf, setVideo, forceUpdate } = Container.useContainer();
+  const { formatMessage } = useIntl();
+  const {
+    videos,
+    conf,
+    setVideo,
+    setVideos,
+    forceUpdate
+  } = Container.useContainer();
   const [comments, setComments] = useState([]);
   const [menuOpened, setMenuOpened] = useState(false);
   const [prevVideos, setPrevVideos] = useState([]);
+  const [liveDetails, setLiveDetails] = useState('{}');
 
   const addComment = data => setComments(prev => insertTop(prev, data));
   const getVideoIndex = videoId =>
@@ -113,9 +121,55 @@ const Sidebar = () => {
     });
   };
 
-  const addCommentGetter = (video, isForce = false) => {
+  const getLiveStatus = videoId => {
+    if (!isRunningComment[videoId]) return;
+
+    api({
+      path: 'youtube/v3/videos',
+      data: {
+        part: 'liveStreamingDetails,snippet',
+        id: videoId,
+        maxResults: 1
+      }
+    }).then(({ error, items }) => {
+      if (error) {
+        return;
+      }
+      if (!items || !items[0] || !items[0].liveStreamingDetails) {
+        return;
+      }
+      setTimeout(() => getLiveStatus(videoId), 1000 * 60);
+
+      const data = items[0].liveStreamingDetails;
+      console.log(videoId, items[0]);
+
+      setLiveDetails(prev => {
+        prev = JSON.parse(prev);
+        prev[videoId] = {
+          title: items[0].snippet.title,
+          viewers: data.concurrentViewers,
+          channel: items[0].snippet.channelTitle
+        };
+        return JSON.stringify(prev);
+      });
+    });
+  };
+
+  const removeVideo = v => {
+    setVideos(prev => prev.filter(video => video.id !== v.id));
+
+    if (!isRunningComment[v.id]) return;
+    delete isRunningComment[v.id];
+
+    return addComment({
+      isSystem: true,
+      video: v,
+      body: <FormattedMessage id="components.side.stop_stream" />
+    });
+  };
+
+  const addCommentGetter = video => {
     if (isRunningComment[video.id]) return;
-    if (video.hideComment && !isForce) return;
 
     api({
       path: 'youtube/v3/videos',
@@ -135,23 +189,22 @@ const Sidebar = () => {
           addComment(reasonText(error.errors[0].reason));
           return;
         }
-        if (!items || !items[0] || !items[0].liveStreamingDetails) {
-          return addComment({
-            video,
-            isSystem: true,
-            body: <FormattedMessage id="errors.default" />
-          });
+
+        const liveChatId =
+          items[0] && items[0]?.liveStreamingDetails?.activeLiveChatId;
+        if (!liveChatId) {
+          removeVideo(video);
+          return alert(formatMessage({ id: 'errors.no_livestream' }));
         }
 
-        const liveChatId = items[0].liveStreamingDetails.activeLiveChatId;
         setVideo(video.id, {
-          liveChatId,
-          hideComment: false
+          liveChatId
         });
         forceUpdate();
 
         isRunningComment[video.id] = true;
         getComment(video.id, liveChatId);
+        getLiveStatus(video.id);
 
         return addComment({
           isSystem: true,
@@ -169,23 +222,6 @@ const Sidebar = () => {
       });
   };
 
-  const removeCommentGetter = video => {
-    if (!isRunningComment[video.id]) return;
-    delete isRunningComment[video.id];
-
-    if (getVideoIndex(video.id) !== -1) {
-      setVideo(video.id, {
-        hideComment: true
-      });
-      forceUpdate();
-    }
-    return addComment({
-      isSystem: true,
-      video,
-      body: <FormattedMessage id="components.side.stop_stream" />
-    });
-  };
-
   useEffect(() => {
     const hasNullData = videos.find(v => !v);
     if (hasNullData) {
@@ -194,12 +230,8 @@ const Sidebar = () => {
     const newVideo = videos.filter(
       ({ id }) => !prevVideos.find(video => video.id === id)
     );
-    const removedVideo = prevVideos.filter(
-      ({ id }) => !videos.find(video => video.id === id)
-    );
 
     newVideo.forEach(addCommentGetter);
-    removedVideo.forEach(removeCommentGetter);
 
     setPrevVideos(JSON.parse(JSON.stringify(videos)));
   }, [videos]);
@@ -224,9 +256,8 @@ const Sidebar = () => {
       {menuOpened && (
         <Config
           toggleMenuOpened={toggleMenuOpened}
-          setComments={setComments}
-          addCommentGetter={addCommentGetter}
-          removeCommentGetter={removeCommentGetter}
+          removeVideo={removeVideo}
+          liveDetails={liveDetails}
         />
       )}
 
@@ -243,7 +274,7 @@ const Sidebar = () => {
       <Comments comments={comments} onScroll={onScroll} divRef={commentsRef} />
 
       <PostWrapper>
-        <Post videos={videos} />
+        <Post videos={videos} liveDetails={liveDetails} />
         <ScrollToBottom isScrolling={isScrolling} onClick={scrollToBottom}>
           <Icon icon="arrow-down" />
         </ScrollToBottom>

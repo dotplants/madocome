@@ -11,9 +11,9 @@ export const Menu = styled.div(({ theme }) => ({
   background: lighten(0.2, theme.bgBase)
 }));
 
-export const MenuItem = styled.button(({ theme }) => ({
+export const MenuItem = styled.button(({ theme, noHover }) => ({
   display: 'block',
-  cursor: 'pointer',
+  cursor: !noHover && 'pointer',
   width: '100%',
   textAlign: 'left',
   padding: '5px 8px',
@@ -22,7 +22,7 @@ export const MenuItem = styled.button(({ theme }) => ({
   background: lighten(0.2, theme.bgBase),
   border: 'none',
   ':hover': {
-    background: lighten(0.4, theme.bgBase)
+    background: !noHover && lighten(0.4, theme.bgBase)
   }
 }));
 

@@ -8,6 +8,7 @@ import ExternalLink from '../external-link';
 import Comment from '../comment';
 import { getConfig } from '../../utils/config';
 import Container from '../../container';
+import Icon from '../icon';
 
 const StyledComments = styled.div({
   gridRow: 2,
@@ -19,11 +20,37 @@ const StyledComments = styled.div({
 });
 
 const Comments = ({ comments, onScroll, divRef }) => {
-  const { conf } = Container.useContainer();
+  const { conf, videos } = Container.useContainer();
   const token = getConfig('access_token', 'live_token');
 
   return (
     <StyledComments onScroll={onScroll} ref={divRef}>
+      {token &&
+        comments
+          .map((comment, key) => {
+            if (comment?.snippet?.textMessageDetails) {
+              const author = comment?.authorDetails;
+              if (
+                (author.isChatOwner && conf.hide_owner) ||
+                (author.isChatModerator && conf.hide_mod) ||
+                (author.isVerified && conf.hide_verified) ||
+                (author.isChatSponsor && conf.hide_sponsor) ||
+                (conf.hide_anonymous &&
+                  !author.isChatOwner &&
+                  !author.isChatModerator &&
+                  !author.isVerified &&
+                  !author.isChatSponsor)
+              ) {
+                return null;
+              }
+            }
+
+            return (
+              <Comment comment={comment} key={comment.id || key} conf={conf} />
+            );
+          })
+          .filter(v => v)
+          .filter((v, i) => i < 200)}
       {!token && (
         <Alert>
           <FormattedMessage
@@ -61,32 +88,26 @@ const Comments = ({ comments, onScroll, divRef }) => {
           </small>
         </Alert>
       )}
-      {token &&
-        comments
-          .map((comment, key) => {
-            if (comment?.snippet?.textMessageDetails) {
-              const author = comment?.authorDetails;
-              if (
-                (author.isChatOwner && conf.hide_owner) ||
-                (author.isChatModerator && conf.hide_mod) ||
-                (author.isVerified && conf.hide_verified) ||
-                (author.isChatSponsor && conf.hide_sponsor) ||
-                (conf.hide_anonymous &&
-                  !author.isChatOwner &&
-                  !author.isChatModerator &&
-                  !author.isVerified &&
-                  !author.isChatSponsor)
-              ) {
-                return null;
-              }
-            }
-
-            return (
-              <Comment comment={comment} key={comment.id || key} conf={conf} />
-            );
-          })
-          .filter(v => v)
-          .filter((v, i) => i < 200)}
+      {!videos[0] && (
+        <Alert>
+          <b>
+            <FormattedMessage id="components.side.introduction.title" />
+          </b>
+          <br />
+          <FormattedMessage
+            id="components.side.introduction.body"
+            values={{
+              add: (
+                <b>
+                  <Icon icon="plus" />
+                  {` `}
+                  <FormattedMessage id="components.side.introduction.add" />
+                </b>
+              )
+            }}
+          />
+        </Alert>
+      )}
     </StyledComments>
   );
 };
