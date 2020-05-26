@@ -48,7 +48,7 @@
     "react-intl": "^4.5.12",
     "react-router-dom": "^5.2.0",
     "react-youtube": "^7.9.0",
-    "styled-components": "^5.1.0",
+    "styled-components": "^5.1.1",
     "styled-normalize": "^8.0.7",
     "unstated-next": "^1.1.0"
   },
