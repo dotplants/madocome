@@ -21,7 +21,7 @@
     "dev:now": "now dev"
   },
   "devDependencies": {
-    "@babel/core": "^7.12.8",
+    "@babel/core": "^7.12.9",
     "@babel/preset-env": "^7.12.7",
     "@babel/preset-react": "^7.12.7",
     "@nzws/prettier-config": "^1.0.1",
