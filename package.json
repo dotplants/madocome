@@ -22,7 +22,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
-    "@babel/preset-env": "^7.12.7",
+    "@babel/preset-env": "^7.12.10",
     "@babel/preset-react": "^7.12.10",
     "@nzws/prettier-config": "^1.0.1",
     "@yuzulabo/eslint-config": "~1",
